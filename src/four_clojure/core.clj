@@ -10,3 +10,8 @@
   "If you are not familiar with polish notation, simple arithmetic might seem confusing."
   []
   (= (- 10 (* 2 3)) 4))
+
+(defn problem-three
+  "Clojure strings are Java strings. This means that you can use any of the Java string methods on Clojure strings."
+  []
+  (= "HELLO WORLD" (.toUpperCase "hello world")))
