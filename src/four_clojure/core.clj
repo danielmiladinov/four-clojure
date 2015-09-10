@@ -15,3 +15,8 @@
   "Clojure strings are Java strings. This means that you can use any of the Java string methods on Clojure strings."
   []
   (= "HELLO WORLD" (.toUpperCase "hello world")))
+
+(defn problem-four
+  "Lists can be constructed with either a function or a quoted form."
+  []
+  (= (list :a :b :c) '(:a :b :c)))
