@@ -20,3 +20,11 @@
   "Lists can be constructed with either a function or a quoted form."
   []
   (= (list :a :b :c) '(:a :b :c)))
+
+(defn problem-five
+  "When operating on a list, the conj function will return a new list with one or more items 'added' to the front.
+  Note that there are two test cases, but you are expected to supply only one answer,
+  which will cause all the tests to pass."
+  []
+  (= '(1 2 3 4) (conj '(2 3 4) 1))
+  (= '(1 2 3 4) (conj '(3 4) 2 1)))
