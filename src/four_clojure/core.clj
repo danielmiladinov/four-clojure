@@ -28,3 +28,8 @@
   []
   (= '(1 2 3 4) (conj '(2 3 4) 1))
   (= '(1 2 3 4) (conj '(3 4) 2 1)))
+
+(defn problem-six
+  "Vectors can be constructed several ways. You can compare them with lists."
+  []
+  (= [:a :b :c] (list :a :b :c) (vec '(:a :b :c)) (vector :a :b :c)))
