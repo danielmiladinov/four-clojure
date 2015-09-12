@@ -33,3 +33,9 @@
   "Vectors can be constructed several ways. You can compare them with lists."
   []
   (= [:a :b :c] (list :a :b :c) (vec '(:a :b :c)) (vector :a :b :c)))
+
+(defn problem-seven
+  "When operating on a Vector, the conj function will return a new vector with one or more items 'added' to the end."
+  []
+  (= [1 2 3 4] (conj [1 2 3] 4))
+  (= [1 2 3 4] (conj [1 2] 3 4)))
