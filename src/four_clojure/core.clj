@@ -39,3 +39,9 @@
   []
   (= [1 2 3 4] (conj [1 2 3] 4))
   (= [1 2 3 4] (conj [1 2] 3 4)))
+
+(defn problem-eight
+  "Sets are collections of unique values."
+  []
+  (= #{:a :b :c :d} (set '(:a :a :b :c :c :c :c :d :d)))
+  (= #{:a :b :c :d} (clojure.set/union #{:a :b :c} #{:b :c :d})))
