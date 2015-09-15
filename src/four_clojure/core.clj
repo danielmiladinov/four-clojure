@@ -45,3 +45,8 @@
   []
   (= #{:a :b :c :d} (set '(:a :a :b :c :c :c :c :d :d)))
   (= #{:a :b :c :d} (clojure.set/union #{:a :b :c} #{:b :c :d})))
+
+(defn problem-nine
+  "When operating on a set, the conj function returns a new set with one or more keys 'added'."
+  []
+  (= #{1 2 3 4} (conj #{1 4 3} 2)))
