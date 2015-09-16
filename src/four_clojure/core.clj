@@ -57,3 +57,8 @@
   []
   (= 20 ((hash-map :a 10, :b 20, :c 30) :b))
   (= 20 (:b {:a 10, :b 20, :c 30})))
+
+(defn problem-eleven
+  "When operating on a map, the conj function returns a new map with one or more key-value pairs 'added'."
+  []
+  (= {:a 1, :b 2, :c 3} (conj {:a 1} [:b 2] [:c 3])))
