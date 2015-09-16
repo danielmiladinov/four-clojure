@@ -50,3 +50,10 @@
   "When operating on a set, the conj function returns a new set with one or more keys 'added'."
   []
   (= #{1 2 3 4} (conj #{1 4 3} 2)))
+
+(defn problem-ten
+  "Maps store key-value pairs. Both maps and keywords can be used as lookup functions. Commas can be used to make
+  maps more readable, but they are not required."
+  []
+  (= 20 ((hash-map :a 10, :b 20, :c 30) :b))
+  (= 20 (:b {:a 10, :b 20, :c 30})))
