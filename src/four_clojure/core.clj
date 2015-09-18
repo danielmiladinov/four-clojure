@@ -70,3 +70,8 @@
   (= 3 (first '(3 2 1)))
   (= 3 (second [2 3 4]))
   (= 3 (last (list 1 2 3))))
+
+(defn problem-thirteen
+  "The rest function will return all the items of a sequence except the first."
+  []
+  (= [20 30 40] (rest [10 20 30 40]))) ; '(20 30 40) also works
