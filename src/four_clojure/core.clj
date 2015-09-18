@@ -62,3 +62,11 @@
   "When operating on a map, the conj function returns a new map with one or more key-value pairs 'added'."
   []
   (= {:a 1, :b 2, :c 3} (conj {:a 1} [:b 2] [:c 3])))
+
+(defn problem-twelve
+  "All Clojure collections support sequencing.
+  You can operate on sequences with functions like first, second, and last."
+  []
+  (= 3 (first '(3 2 1)))
+  (= 3 (second [2 3 4]))
+  (= 3 (last (list 1 2 3))))
