@@ -75,3 +75,11 @@
   "The rest function will return all the items of a sequence except the first."
   []
   (= [20 30 40] (rest [10 20 30 40]))) ; '(20 30 40) also works
+
+(defn problem-fourteen
+  "Clojure has many different ways to create functions."
+  []
+  (= 8 ((fn add-five [x] (+ x 5)) 3))
+  (= 8 ((fn [x] (+ x 5)) 3))
+  (= 8 (#(+ % 5) 3))
+  (= 8 ((partial + 5) 3)))
