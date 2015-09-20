@@ -83,3 +83,11 @@
   (= 8 ((fn [x] (+ x 5)) 3))
   (= 8 (#(+ % 5) 3))
   (= 8 ((partial + 5) 3)))
+
+(defn problem-fifteen
+  "Write a function which doubles a number."
+  []
+  (= ((fn double-it [x] (* 2 x)) 2) 4)
+  (= ((fn double-it [x] (* 2 x)) 3) 6)
+  (= ((fn double-it [x] (* 2 x)) 11) 22)
+  (= ((fn double-it [x] (* 2 x)) 7) 14))
