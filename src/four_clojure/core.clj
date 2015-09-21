@@ -91,3 +91,10 @@
   (= ((fn double-it [x] (* 2 x)) 3) 6)
   (= ((fn double-it [x] (* 2 x)) 11) 22)
   (= ((fn double-it [x] (* 2 x)) 7) 14))
+
+(defn problem-sixteen
+  "Write a function which returns a personalized greeting."
+  []
+  (= ((fn greetify [name] (str "Hello, " name "!")) "Dave") "Hello, Dave!")
+  (= ((fn greetify [name] (str "Hello, " name "!")) "Jenn") "Hello, Jenn!")
+  (= ((fn greetify [name] (str "Hello, " name "!")) "Rhea") "Hello, Rhea!"))
