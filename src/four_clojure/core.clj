@@ -105,3 +105,9 @@
   Do not confuse the map function with the map data structure."
   []
   (= '(6 7 8) (map #(+ % 5) '(1 2 3))))
+
+(defn problem-eighteen
+  "The filter function takes two arguments: a predicate function (f) and a sequence (s).
+  Filter returns a new sequence consisting of all the items of s for which (f item) returns true."
+  []
+  (= '(6 7) (filter #(> % 5) '(3 4 5 6 7))))
