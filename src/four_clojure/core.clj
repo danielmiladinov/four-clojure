@@ -111,3 +111,16 @@
   Filter returns a new sequence consisting of all the items of s for which (f item) returns true."
   []
   (= '(6 7) (filter #(> % 5) '(3 4 5 6 7))))
+
+(defn problem-nineteen
+  "Write a function which returns the last element in a sequence."
+  []
+  (let [my-last (fn my-last [coll]
+                  (loop [head (first coll)
+                         tail (rest coll)]
+                    (if (empty? tail)
+                      head
+                      (recur (first tail) (rest tail)))))]
+    (= (my-last [1 2 3 4 5]) 5)
+    (= (my-last '(5 4 3)) 3)
+    (= (my-last ["b" "c" "d"]) "d")))
