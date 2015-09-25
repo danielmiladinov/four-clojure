@@ -115,12 +115,7 @@
 (defn problem-nineteen
   "Write a function which returns the last element in a sequence."
   []
-  (let [my-last (fn my-last [coll]
-                  (loop [head (first coll)
-                         tail (rest coll)]
-                    (if (empty? tail)
-                      head
-                      (recur (first tail) (rest tail)))))]
+  (let [my-last (comp first reverse)]
     (= (my-last [1 2 3 4 5]) 5)
     (= (my-last '(5 4 3)) 3)
     (= (my-last ["b" "c" "d"]) "d")))
