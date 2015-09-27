@@ -119,3 +119,11 @@
     (= (my-last [1 2 3 4 5]) 5)
     (= (my-last '(5 4 3)) 3)
     (= (my-last ["b" "c" "d"]) "d")))
+
+(defn problem-twenty
+  "Write a function which returns the second to last element from a sequence."
+  []
+  (let [penult (comp second reverse)]
+    (= (penult (list 1 2 3 4 5)) 4)
+    (= (penult ["a" "b" "c"]) "b")
+    (= (penult [[1 2] [3 4]]) [1 2])))
