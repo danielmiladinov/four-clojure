@@ -127,3 +127,12 @@
     (= (penult (list 1 2 3 4 5)) 4)
     (= (penult ["a" "b" "c"]) "b")
     (= (penult [[1 2] [3 4]]) [1 2])))
+
+(defn problem-twenty-one
+  "Write a function which returns the Nth element from a sequence."
+  []
+  (let [my-nth (fn [coll n] ((apply comp (cons first (repeat n rest))) coll))]
+    (= (my-nth '(4 5 6 7) 2) 6)
+    (= (my-nth [:a :b :c] 0) :a)
+    (= (my-nth [1 2 3 4] 1) 2)
+    (= (my-nth '([1 2] [3 4] [5 6]) 2) [5 6])))
