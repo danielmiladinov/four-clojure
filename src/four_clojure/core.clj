@@ -136,3 +136,13 @@
     (= (my-nth [:a :b :c] 0) :a)
     (= (my-nth [1 2 3 4] 1) 2)
     (= (my-nth '([1 2] [3 4] [5 6]) 2) [5 6])))
+
+(defn problem-twenty-two
+  "Write a function which returns the total number of elements in a sequence."
+  []
+  (let [my-cnt (fn [coll] (loop [c (seq coll) n 0] (if c (recur (next c) (inc n)) n)))]
+    (= (my-cnt '(1 2 3 3 1)) 5)
+    (= (my-cnt "Hello World") 11)
+    (= (my-cnt [[1 2] [3 4] [5 6]]) 3)
+    (= (my-cnt '(13)) 1)
+    (= (my-cnt '(:a :b :c)) 3)))
