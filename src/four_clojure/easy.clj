@@ -42,3 +42,13 @@
     (= (my-rev [1 2 3 4 5]) [5 4 3 2 1])
     (= (my-rev (sorted-set 5 7 2 7)) '(7 5 2))
     (= (my-rev [[1 2] [3 4] [5 6]]) [[5 6] [3 4] [1 2]])))
+
+(defn problem-twenty-four
+  "Write a function which returns the sum of a sequence of numbers."
+  []
+  (let [my-sum (fn [coll] (reduce + coll))]
+    (= (my-sum [1 2 3]) 6)
+    (= (my-sum (list 0 -2 5 5)) 8)
+    (= (my-sum #{4 2 1}) 7)
+    (= (my-sum '(0 0 -1)) -1)
+    (= (my-sum '(1 10 3)) 14)))
