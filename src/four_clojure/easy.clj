@@ -52,3 +52,12 @@
     (= (my-sum #{4 2 1}) 7)
     (= (my-sum '(0 0 -1)) -1)
     (= (my-sum '(1 10 3)) 14)))
+
+(defn problem-twenty-five
+  "Write a function which returns only the odd numbers from a sequence."
+  []
+  (let [only-odd (partial filter odd?)]
+    (= (only-odd #{1 2 3 4 5}) '(1 3 5))
+    (= (only-odd [4 2 1 6]) '(1))
+    (= (only-odd [2 2 4 6]) '())
+    (= (only-odd [1 1 1 3]) '(1 1 1 3))))
