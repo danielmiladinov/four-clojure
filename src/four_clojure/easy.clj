@@ -61,3 +61,11 @@
     (= (only-odd [4 2 1 6]) '(1))
     (= (only-odd [2 2 4 6]) '())
     (= (only-odd [1 1 1 3]) '(1 1 1 3))))
+
+(defn problem-twenty-six
+  "Write a function which returns the first X fibonacci numbers."
+  []
+  (let [my-fibs (fn [n] (take n (map second (iterate (fn [[a b]] [b (+ a b)]) [0 1]))))]
+    (= (my-fibs 3) '(1 1 2))
+    (= (my-fibs 6) '(1 1 2 3 5 8))
+    (= (my-fibs 8) '(1 1 2 3 5 8 13 21))))
