@@ -69,3 +69,13 @@
     (= (my-fibs 3) '(1 1 2))
     (= (my-fibs 6) '(1 1 2 3 5 8))
     (= (my-fibs 8) '(1 1 2 3 5 8 13 21))))
+
+(defn problem-twenty-seven
+  "Write a function which returns true if the given sequence is a palindrome."
+  []
+  (let [palindrome? (fn [p] (= (into () p) (seq p)))]
+    (false? (palindrome? '(1 2 3 4 5)))
+    (true?  (palindrome? "racecar"))
+    (true?  (palindrome? [:foo :bar :foo]))
+    (true?  (palindrome? '(1 1 3 3 1 1)))
+    (false? (palindrome? '(:a :b :c)))))
