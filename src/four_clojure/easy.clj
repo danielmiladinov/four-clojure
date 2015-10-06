@@ -79,3 +79,20 @@
     (true?  (palindrome? [:foo :bar :foo]))
     (true?  (palindrome? '(1 1 3 3 1 1)))
     (false? (palindrome? '(:a :b :c)))))
+
+(defn problem-twenty-eight
+  "Write a function which flattens a sequence."
+  []
+  (let [my-flatten (fn [coll]
+                     (seq
+                       (reduce
+                         (fn r [a e]
+                           (
+                             (if (sequential? e)
+                               (partial reduce r)
+                               conj) a e))
+                         []
+                         coll)))]
+    (= (my-flatten '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6))
+    (= (my-flatten ["a" ["b"] "c"]) '("a" "b" "c"))
+    (= (my-flatten '((((:a))))) '(:a))))
