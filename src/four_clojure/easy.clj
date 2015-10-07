@@ -96,3 +96,20 @@
     (= (my-flatten '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6))
     (= (my-flatten ["a" ["b"] "c"]) '("a" "b" "c"))
     (= (my-flatten '((((:a))))) '(:a))))
+
+(defn problem-twenty-nine
+  "Write a function which takes a string and returns a new string containing only the capital letters."
+  []
+  (let [filter-caps (fn [s]
+                      (clojure.string/join
+                        (filter
+                          (fn [c]
+                            (and
+                              (Character/isLetter c)
+                              (=
+                                (str c)
+                                (clojure.string/capitalize c))))
+                          s)))]
+    (= (filter-caps "HeLlO, WoRlD!") "HLOWRD")
+    (empty? (filter-caps "nothing"))
+    (= (filter-caps "$#A(*&987Zf") "AZ")))
