@@ -113,3 +113,20 @@
     (= (filter-caps "HeLlO, WoRlD!") "HLOWRD")
     (empty? (filter-caps "nothing"))
     (= (filter-caps "$#A(*&987Zf") "AZ")))
+
+(defn problem-thirty
+  "Write a function which removes consecutive duplicates from a sequence."
+  []
+  (let [filter-dupes (fn [coll]
+                       (let [c (seq coll)]
+                         (first
+                           (reduce
+                             (fn s [[acc pred] e]
+                               (if (pred e)
+                                 [(conj acc e) (fn [x] (not= e x))]
+                                 [acc pred]))
+                             [[] identity]
+                             c))))]
+    (= (apply str (filter-dupes "Leeeeeerrroyyy")) "Leroy")
+    (= (filter-dupes [1 1 2 3 3 2 2 3]) '(1 2 3 2 3))
+    (= (filter-dupes [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))))
