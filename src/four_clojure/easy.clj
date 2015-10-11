@@ -130,3 +130,11 @@
     (= (apply str (filter-dupes "Leeeeeerrroyyy")) "Leroy")
     (= (filter-dupes [1 1 2 3 3 2 2 3]) '(1 2 3 2 3))
     (= (filter-dupes [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))))
+
+(defn problem-thirty-one
+  "Write a function which packs consecutive duplicates into sub-lists."
+  []
+  (let [pack-duplicates (fn [coll] (partition-by identity coll))]
+    (= (pack-duplicates [1 1 2 1 1 1 3 3]) '((1 1) (2) (1 1 1) (3 3)))
+    (= (pack-duplicates [:a :a :b :b :c]) '((:a :a) (:b :b) (:c)))
+    (= (pack-duplicates [:a :a :b :b :c]) '((:a :a) (:b :b) (:c)))))
