@@ -138,3 +138,12 @@
     (= (pack-duplicates [1 1 2 1 1 1 3 3]) '((1 1) (2) (1 1 1) (3 3)))
     (= (pack-duplicates [:a :a :b :b :c]) '((:a :a) (:b :b) (:c)))
     (= (pack-duplicates [:a :a :b :b :c]) '((:a :a) (:b :b) (:c)))))
+
+(defn problem-thirty-two
+  "Write a function which duplicates each element of a sequence."
+  []
+  (let [duplicate-elems (fn [coll] (mapcat #(repeat 2 %) coll))]
+    (= (duplicate-elems [1 2 3]) '(1 1 2 2 3 3))
+    (= (duplicate-elems [:a :a :b :b]) '(:a :a :a :a :b :b :b :b))
+    (= (duplicate-elems [[1 2] [3 4]]) '([1 2] [1 2] [3 4] [3 4]))
+    (= (duplicate-elems [[1 2] [3 4]]) '([1 2] [1 2] [3 4] [3 4]))))
