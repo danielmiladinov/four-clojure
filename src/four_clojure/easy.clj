@@ -147,3 +147,13 @@
     (= (duplicate-elems [:a :a :b :b]) '(:a :a :a :a :b :b :b :b))
     (= (duplicate-elems [[1 2] [3 4]]) '([1 2] [1 2] [3 4] [3 4]))
     (= (duplicate-elems [[1 2] [3 4]]) '([1 2] [1 2] [3 4] [3 4]))))
+
+(defn problem-thirty-three
+  "Write a function which replicates each element of a sequence a variable number of times."
+  []
+  (let [replicate-elems (fn [coll n] (mapcat #(repeat n %) coll))]
+    (= (replicate-elems [1 2 3] 2) '(1 1 2 2 3 3))
+    (= (replicate-elems [:a :b] 4) '(:a :a :a :a :b :b :b :b))
+    (= (replicate-elems [4 5 6] 1) '(4 5 6))
+    (= (replicate-elems [[1 2] [3 4]] 2) '([1 2] [1 2] [3 4] [3 4]))
+    (= (replicate-elems [44 33] 2) [44 44 33 33])))
