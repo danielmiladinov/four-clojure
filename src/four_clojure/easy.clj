@@ -157,3 +157,11 @@
     (= (replicate-elems [4 5 6] 1) '(4 5 6))
     (= (replicate-elems [[1 2] [3 4]] 2) '([1 2] [1 2] [3 4] [3 4]))
     (= (replicate-elems [44 33] 2) [44 44 33 33])))
+
+(defn problem-thirty-four
+  "Write a function which creates a list of all integers in a given range."
+  []
+  (let [my-range (fn [s n] (take (- n s) (iterate inc s)))]
+    (= (my-range 1) 4 '(1 2 3))
+    (= (my-range -2 2) '(-2 -1 0 1))
+    (= (my-range 5 8) '(5 6 7))))
