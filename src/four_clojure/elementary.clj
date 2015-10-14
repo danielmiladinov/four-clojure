@@ -111,3 +111,10 @@
   Filter returns a new sequence consisting of all the items of s for which (f item) returns true."
   []
   (= '(6 7) (filter #(> % 5) '(3 4 5 6 7))))
+
+(defn problem-thirty-five
+  "Clojure lets you give local names to values using the special let-form."
+  []
+  (= 7 (let [x 5] (+ 2 x)))
+  (= 7 (let [x 3, y 10] (- y x)))
+  (= 7 (let [x 21] (let [y 3] (/ x y)))))
