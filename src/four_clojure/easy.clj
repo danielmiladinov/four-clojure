@@ -165,3 +165,11 @@
     (= (my-range 1) 4 '(1 2 3))
     (= (my-range -2 2) '(-2 -1 0 1))
     (= (my-range 5 8) '(5 6 7))))
+
+(defn problem-thirty-eight
+  "Write a function which takes a variable number of parameters and returns the maximum value."
+  []
+  (let [my-max (fn [& args] (reduce #(if (< %1 %2) %2 %1) args))]
+    (= (my-max 1 8 3 4) 8)
+    (= (my-max 30 20) 30)
+    (= (my-max 45 67 11) 67)))
