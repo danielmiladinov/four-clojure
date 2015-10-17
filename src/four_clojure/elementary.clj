@@ -125,3 +125,8 @@
   (= 10 (let [x 7 y 3 z 1] (+ x y)))
   (= 4  (let [x 7 y 3 z 1] (+ y z)))
   (= 1  (let [x 7 y 3 z 1] z)))
+
+(defn problem-thirty-seven
+  "Regex patterns are supported with a special reader macro."
+  []
+  (= "ABC" (apply str (re-seq #"[A-Z]+" "bA1B3Ce "))))
