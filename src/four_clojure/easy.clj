@@ -182,3 +182,11 @@
     (= (my-interleave [1 2] [3 4 5 6]) '(1 3 2 4))
     (= (my-interleave [1 2 3 4] [5]) [1 5])
     (= (my-interleave [30 20] [25 15]) [30 25 20 15])))
+
+(defn problem-forty
+  "Write a function which separates the items of a sequence by an arbitrary value."
+  []
+  (let [my-interpose (fn [s c] (conj (mapcat #(vector s %) (rest c)) (first c)))]
+    (= (my-interpose 0 [1 2 3]) [1 0 2 0 3])
+    (= (apply str (my-interpose ", " ["one" "two" "three"])) "one, two, three")
+    (= (my-interpose :z [:a :b :c :d]) [:a :z :b :z :c :z :d])))
