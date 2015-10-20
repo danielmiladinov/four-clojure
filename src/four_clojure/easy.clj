@@ -190,3 +190,14 @@
     (= (my-interpose 0 [1 2 3]) [1 0 2 0 3])
     (= (apply str (my-interpose ", " ["one" "two" "three"])) "one, two, three")
     (= (my-interpose :z [:a :b :c :d]) [:a :z :b :z :c :z :d])))
+
+(defn problem-forty-one
+  "Write a function which drops every Nth item from a sequence."
+  []
+  (let [my-drop-nth (fn [coll n]
+                      (->> (map-indexed vector coll)
+                          (remove #(zero? (mod (inc (first %)) n)))
+                          (map second)))]
+    (= (my-drop-nth [1 2 3 4 5 6 7 8] 3) [1 2 4 5 7 8])
+    (= (my-drop-nth [:a :b :c :d :e :f] 2) [:a :c :e])
+    (= (my-drop-nth [1 2 3 4 5 6] 4) [1 2 3 5 6])))
