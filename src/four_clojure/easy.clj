@@ -201,3 +201,12 @@
     (= (my-drop-nth [1 2 3 4 5 6 7 8] 3) [1 2 4 5 7 8])
     (= (my-drop-nth [:a :b :c :d :e :f] 2) [:a :c :e])
     (= (my-drop-nth [1 2 3 4 5 6] 4) [1 2 3 5 6])))
+
+(defn problem-forty-two
+  "Write a function which calculates factorials."
+  []
+  (let [my-factorial (fn [x] (reduce * (map inc (range x))))]
+    (= (my-factorial 1) 1)
+    (= (my-factorial 3) 6)
+    (= (my-factorial 5) 120)
+    (= (my-factorial 8) 40320)))
