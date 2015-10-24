@@ -210,3 +210,8 @@
     (= (my-factorial 3) 6)
     (= (my-factorial 5) 120)
     (= (my-factorial 8) 40320)))
+
+(defn problem-forty-five
+  "The iterate function can be used to produce an infinite lazy sequence."
+  []
+  (= [1 4 7 10 13] (take 5 (iterate #(+ 3 %) 1))))
