@@ -231,3 +231,11 @@
   []
   (= 6 (some #{2 7 6} [5 6 7 8]))
   (= 6 (some #(when (even? %) %) [5 6 7 8])))
+
+(defn problem-forty-nine
+  "Write a function which will split a sequence into two parts."
+  []
+  (let [my-split-at (fn [n coll] [(take n coll) (drop n coll)])]
+    (= (my-split-at 3 [1 2 3 4 5 6]) [[1 2 3] [4 5 6]])
+    (= (my-split-at 1 [:a :b :c :d]) [[:a] [:b :c :d]])
+    (= (my-split-at 2 [[1 2] [3 4] [5 6]]) [[[1 2] [3 4]] [[5 6]]])))
