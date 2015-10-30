@@ -31,3 +31,20 @@
     (= true ((flip-args >) 7 8))
     (= 4 ((flip-args quot) 2 8))
     (= [1 2 3] ((flip-args take) [1 2 3 4 5] 3))))
+
+(defn problem-fifty
+  "Write a function which takes a sequence consisting of items with different types and splits them up into a set of
+   homogeneous sub-sequences. The internal order of each sub-sequence should be maintained, but the sub-sequences
+   themselves can be returned in any order (this is why 'set' is used in the test cases)."
+  []
+  (let [split-by-type (fn [coll]
+                        (map second
+                          (reduce
+                            (fn [m v]
+                              (update-in
+                                m
+                                [(type v)]
+                                #(conj (or %1 []) v))) {} coll)))]
+    (= (set (split-by-type [1 :a 2 :b 3 :c])) #{[1 2 3] [:a :b :c]})
+    (= (set (split-by-type [:a "foo" "bar" :b])) #{[:a :b] ["foo" "bar"]})
+    (= (set (split-by-type [[1 2] :a [3 4] 5 6 :b])) #{[[1 2] [3 4]] [:a :b] [5 6]})))
