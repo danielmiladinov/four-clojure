@@ -239,3 +239,8 @@
     (= (my-split-at 3 [1 2 3 4 5 6]) [[1 2 3] [4 5 6]])
     (= (my-split-at 1 [:a :b :c :d]) [[:a] [:b :c :d]])
     (= (my-split-at 2 [[1 2] [3 4] [5 6]]) [[[1 2] [3 4]] [[5 6]]])))
+
+(defn problem-fifty-one
+  "Here is an example of some more sophisticated destructuring."
+  []
+  (= [1 2 [3 4 5] [1 2 3 4 5]] (let [[a b & c :as d] [1 2 3 4 5]] [a b c d])))
