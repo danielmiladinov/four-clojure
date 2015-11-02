@@ -130,3 +130,8 @@
   "Regex patterns are supported with a special reader macro."
   []
   (= "ABC" (apply str (re-seq #"[A-Z]+" "bA1B3Ce "))))
+
+(defn problem-fifty-two
+  "Let bindings and function parameter lists support destructuring."
+  []
+  (= [2 4] (let [[a b c d e] [0 1 2 3 4]] [c e])))
