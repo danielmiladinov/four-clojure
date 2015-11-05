@@ -41,3 +41,20 @@
     (= (set (split-by-type [1 :a 2 :b 3 :c])) #{[1 2 3] [:a :b :c]})
     (= (set (split-by-type [:a "foo" "bar" :b])) #{[:a :b] ["foo" "bar"]})
     (= (set (split-by-type [[1 2] :a [3 4] 5 6 :b])) #{[[1 2] [3 4]] [:a :b] [5 6]})))
+
+(defn problem-fifty-four
+  "Write a function which returns a sequence of lists of x items each.
+  Lists of less than x items should not be returned."
+  []
+  (let [chunks (fn [x coll]
+                 (let [go (fn [all-parts part inputs]
+                            (if-let [n (first inputs)]
+                              (let [next-part (conj part n)]
+                                (if (= x (count next-part))
+                                  (recur (conj all-parts next-part) [] (rest inputs))
+                                  (recur all-parts, (conj part n) (rest inputs))))
+                              all-parts))]
+                   (go [] [] coll)))]
+    (= (chunks 3 (range 9)) '((0 1 2) (3 4 5) (6 7 8)))
+    (= (chunks 2 (range 8)) '((0 1) (2 3) (4 5) (6 7)))
+    (= (chunks 3 (range 8)) '((0 1 2) (3 4 5)))))
