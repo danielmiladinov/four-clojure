@@ -58,3 +58,13 @@
     (= (chunks 3 (range 9)) '((0 1 2) (3 4 5) (6 7 8)))
     (= (chunks 2 (range 8)) '((0 1) (2 3) (4 5) (6 7)))
     (= (chunks 3 (range 8)) '((0 1 2) (3 4 5)))))
+
+(defn problem-fifty-five
+  "Write a function which returns a map containing the number of occurences of each distinct item in a sequence."
+  []
+  (let [occurences (fn [coll] (->> (group-by identity coll)
+                                   (map (fn [[x y]] [x (count y)]))
+                                   (into {})))]
+    (= (occurences [1 1 2 3 2 1 1]) {1 4, 2 2, 3 1})
+    (= (occurences [:b :a :b :a :b]) {:a 2, :b 3})
+    (= (occurences '([1 2] [1 3] [1 3])) {[1 2] 1, [1 3] 2})))
