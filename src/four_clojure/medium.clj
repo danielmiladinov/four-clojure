@@ -68,3 +68,21 @@
     (= (occurences [1 1 2 3 2 1 1]) {1 4, 2 2, 3 1})
     (= (occurences [:b :a :b :a :b]) {:a 2, :b 3})
     (= (occurences '([1 2] [1 3] [1 3])) {[1 2] 1, [1 3] 2})))
+
+(defn problem-fifty-six
+  "Write a function which removes the duplicates from a sequence. Order of the items must be maintained."
+  []
+  (let [remove-dupes (fn [coll]
+                       (->> (reduce
+                              (fn [[result uniques] element]
+                                (if (not (contains? uniques element))
+                                  [(conj result element) (conj uniques element)]
+                                  [result uniques]))
+                              [[] #{}]
+                              coll)
+                            (first)))]
+    (= (remove-dupes [1 2 1 3 1 2 4]) [1 2 3 4])
+    (= (remove-dupes [:a :a :b :b :c :c]) [:a :b :c])
+    (= (remove-dupes '([2 4] [1 2] [1 3] [1 3])) '([2 4] [1 2] [1 3]))
+    (= (remove-dupes (range 50)) (range 50))))
+
