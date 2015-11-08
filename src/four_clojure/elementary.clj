@@ -135,3 +135,9 @@
   "Let bindings and function parameter lists support destructuring."
   []
   (= [2 4] (let [[a b c d e] [0 1 2 3 4]] [c e])))
+
+(defn problem-fifty-seven
+  "A recursive function is a function which calls itself.
+  This is one of the fundamental techniques used in functional programming."
+  []
+  (= '(5 4 3 2 1) ((fn foo [x] (when (> x 0) (conj (foo (dec x)) x))) 5)))
