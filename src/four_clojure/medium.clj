@@ -86,3 +86,15 @@
     (= (remove-dupes '([2 4] [1 2] [1 3] [1 3])) '([2 4] [1 2] [1 3]))
     (= (remove-dupes (range 50)) (range 50))))
 
+(defn problem-fifty-eight
+  "Write a function which allows you to create function compositions.
+  The parameter list should take a variable number of functions,
+  and create a function that applies them from right-to-left."
+  []
+  (let [my-compose (fn [& fns]
+                     (fn [& args]
+                       (first (reduce (fn [acc f] [(apply f acc)]) args (reverse fns)))))]
+    (= [3 2 1] ((my-compose rest reverse) [1 2 3 4]))
+    (= 5 ((my-compose (partial + 3) second) [1 2 3 4]))
+    (= true ((my-compose zero? #(mod % 8) +) 3 5 7 9))
+    (= "HELLO" ((my-compose #(.toUpperCase %) #(apply str %) take) 5 "hello world"))))
