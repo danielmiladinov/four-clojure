@@ -98,3 +98,12 @@
     (= 5 ((my-compose (partial + 3) second) [1 2 3 4]))
     (= true ((my-compose zero? #(mod % 8) +) 3 5 7 9))
     (= "HELLO" ((my-compose #(.toUpperCase %) #(apply str %) take) 5 "hello world"))))
+
+(defn problem-fifty-nine
+  "Take a set of functions and return a new function that takes a variable number of arguments
+  and returns a sequence containing the result of applying each function left-to-right to the argument list."
+  []
+  (let [my-juxt (fn [& fs] (fn [& args] (map (fn [f] (apply f args)) fs)))]
+    (= [21 6 1] ((my-juxt + max min) 2 3 5 1 6 4))
+    (= ["HELLO" 5] ((my-juxt #(.toUpperCase %) count) "hello"))
+    (= [2 6 4] ((my-juxt :a :c :b) {:a 2, :b 4, :c 6, :d 8 :e 10}))))
