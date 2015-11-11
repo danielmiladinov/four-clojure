@@ -107,3 +107,19 @@
     (= [21 6 1] ((my-juxt + max min) 2 3 5 1 6 4))
     (= ["HELLO" 5] ((my-juxt #(.toUpperCase %) count) "hello"))
     (= [2 6 4] ((my-juxt :a :c :b) {:a 2, :b 4, :c 6, :d 8 :e 10}))))
+
+(defn problem-sixty
+  "Write a function which behaves like reduce, but returns each intermediate value of the reduction.
+  Your function must accept either two or three arguments, and the return sequence must be lazy."
+  []
+  (let [scan (fn scan
+               ([f coll]
+                (when-let [s (seq coll)]
+                  (scan f (first s) (rest s))))
+               ([f init coll]
+                (cons init (lazy-seq
+                             (when-let [s (seq coll)]
+                               (scan f (f init (first s)) (rest s)))))))]
+    (= (take 5 (scan + (range))) [0 1 3 6 10])
+    (= (scan conj [1] [2 3 4]) [[1] [1 2] [1 2 3] [1 2 3 4]])
+    (= (last (scan * 2 [3 4 5])) (reduce * 2 [3 4 5]) 120)))
