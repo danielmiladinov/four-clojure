@@ -244,3 +244,11 @@
   "Here is an example of some more sophisticated destructuring."
   []
   (= [1 2 [3 4 5] [1 2 3 4 5]] (let [[a b & c :as d] [1 2 3 4 5]] [a b c d])))
+
+(defn problem-sixty-one
+  "Write a function which takes a vector of keys and a vector of values and constructs a map from them."
+  []
+  (let [build-map (fn [ks vs] (into {} (map vector ks vs)))]
+    (= (build-map [:a :b :c] [1 2 3]) {:a 1, :b 2, :c 3})
+    (= (build-map [1 2 3 4] ["one" "two" "three"]) {1 "one", 2 "two", 3 "three"})
+    (= (build-map [:foo :bar] ["foo" "bar" "baz"]) {:foo "foo", :bar "bar"})))
