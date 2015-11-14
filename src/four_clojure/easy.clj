@@ -261,3 +261,20 @@
     (= (take 5 (my-iterate #(* 2 %) 1)) [1 2 4 8 16])
     (= (take 100 (my-iterate inc 0)) (take 100 (range)))
     (= (take 9 (my-iterate #(inc (mod % 3)) 1)) (take 9 (cycle [1 2 3])))))
+
+(defn problem-sixty-three
+  "Given a function f and a sequence s, write a function which returns a map.
+  The keys should be the values of f applied to each item in s.
+  The value at each key should be a vector of corresponding items in the order they appear in s."
+  []
+  (let [my-group-by (fn my-group-by [f coll]
+                      (reduce
+                        (fn [m v]
+                          (let [k (f v)]
+                            (assoc m k (conj (get m k []) v)))) {} coll))]
+    (= (my-group-by #(> % 5) [1 3 6 8])
+       {false [1 3], true [6 8]})
+    (= (my-group-by #(apply / %) [[1 2] [2 4] [4 6] [3 6]])
+       {1/2 [[1 2] [2 4] [3 6]], 2/3 [[4 6]]})
+    (= (my-group-by count [[1] [1 2] [3] [1 2 3] [2 3]])
+       {1 [[1] [3]], 2 [[1 2] [2 3]], 3 [[1 2 3]]})))
