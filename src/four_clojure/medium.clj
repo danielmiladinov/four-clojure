@@ -123,3 +123,26 @@
     (= (take 5 (scan + (range))) [0 1 3 6 10])
     (= (scan conj [1] [2 3 4]) [[1] [1 2] [1 2 3] [1 2 3 4]])
     (= (last (scan * 2 [3 4 5])) (reduce * 2 [3 4 5]) 120)))
+
+(defn problem-sixty-five
+  "Clojure has many sequence types, which act in subtly different ways.
+  The core functions typically convert them into a uniform \"sequence\" type and work with them that way,
+  but it can be important to understand the behavioral and performance differences so that you know which kind
+  is appropriate for your application.
+  Write a function which takes a collection and returns one of
+  :map, :set, :list, or :vector - describing the type of collection it was given.
+  You won't be allowed to inspect their class or use the built-in predicates like list? -
+  the point is to poke at them and understand their behavior."
+  []
+  (let [coll-type (fn [coll]
+                    (let [e (empty coll)]
+                      (cond
+                        (= {} e) :map
+                        (= #{} e) :set
+                        (reversible? e) :vector
+                        :else :list)))]
+    (= :map (coll-type {:a 1, :b 2}))
+    (= :list (coll-type (range (rand-int 20))))
+    (= :vector (coll-type [1 2 3 4 5 6]))
+    (= :set (coll-type #{10 (rand-int 5)}))
+    (= [:map :set :vector :list] (map coll-type [{} #{} [] ()]))))
