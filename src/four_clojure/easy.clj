@@ -289,3 +289,12 @@
   (= 15 (reduce + [1 2 3 4 5]))
   (=  0 (reduce + []))
   (=  6 (reduce + 1 [2 3])))
+
+(defn problem-sixty-six
+  "Given two integers, write a function which returns the greatest common divisor."
+  []
+  (let [my-gcd (fn [a b] (if (= b 0) a (recur b (mod a b))))]
+    (= (my-gcd 2 4) 2)
+    (= (my-gcd 10 5) 5)
+    (= (my-gcd 5 7) 1)
+    (= (my-gcd 1023 858) 33)))
