@@ -146,3 +146,29 @@
     (= :vector (coll-type [1 2 3 4 5 6]))
     (= :set (coll-type #{10 (rand-int 5)}))
     (= [:map :set :vector :list] (map coll-type [{} #{} [] ()]))))
+
+(defn problem-sixty-seven
+  "Write a function which returns the first x number of prime numbers."
+  []
+
+  (let [primes (fn [x] (let [prime? (fn [n]
+                                      (cond
+                                        (= 1 n) false
+                                        (even? n) (= 2 n)
+                                        :else
+                                        (not
+                                          (reduce #(or %1 %2) false
+                                                  (map #(= (mod n %) 0)
+                                                       (range 3 (+ 1 (Math/sqrt n)) 2))))))
+                             next-prime (fn [n]
+                                          (cond
+                                            (= 1 n) 2
+                                            :else
+                                            (first
+                                              (filter prime?
+                                                      (range (+ n 1) (* n 2))))))]
+                         (take x (iterate next-prime 2))))]
+
+    (= (primes 2) [2 3])
+    (= (primes 5) [2 3 5 7 11])
+    (= (last (primes 100)) 541)))
