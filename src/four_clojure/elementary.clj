@@ -74,7 +74,7 @@
 (defn problem-thirteen
   "The rest function will return all the items of a sequence except the first."
   []
-  (= [20 30 40] (rest [10 20 30 40]))) ; '(20 30 40) also works
+  (= [20 30 40] (rest [10 20 30 40])))                      ; '(20 30 40) also works
 
 (defn problem-fourteen
   "Clojure has many different ways to create functions."
@@ -123,8 +123,8 @@
   "Can you bind x, y, and z so that these are all true?"
   []
   (= 10 (let [x 7 y 3 z 1] (+ x y)))
-  (= 4  (let [x 7 y 3 z 1] (+ y z)))
-  (= 1  (let [x 7 y 3 z 1] z)))
+  (= 4 (let [x 7 y 3 z 1] (+ y z)))
+  (= 1 (let [x 7 y 3 z 1] z)))
 
 (defn problem-thirty-seven
   "Regex patterns are supported with a special reader macro."
@@ -141,3 +141,16 @@
   This is one of the fundamental techniques used in functional programming."
   []
   (= '(5 4 3 2 1) ((fn foo [x] (when (> x 0) (conj (foo (dec x)) x))) 5)))
+
+(defn problem-sixty-eight
+  "Clojure only has one non-stack-consuming looping construct: recur.
+  Either a function or a loop can be used as the recursion point.
+  Either way, recur rebinds the bindings of the recursion point to the values it is passed.
+  Recur must be called from the tail-position, and calling it elsewhere will result in an error."
+  []
+  (= [7 6 5 4 3]
+     (loop [x 5
+            result []]
+       (if (> x 0)
+         (recur (dec x) (conj result (+ 2 x)))
+         result))))
