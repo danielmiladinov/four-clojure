@@ -196,3 +196,18 @@
        {1 7, 2 10, 3 15})
     (= (my-merge-with concat {:a [3], :b [6]} {:a [4 5], :c [8 9]} {:b [7]})
        {:a [3 4 5], :b [6 7], :c [8 9]})))
+
+(defn problem-seventy
+  "Write a function that splits a sentence up into a sorted list of words.
+  Capitalization should not affect sort order and punctuation should be ignored."
+  []
+  (let [sort-words-ci (fn [words] (->> (clojure.string/split words #"\W+")
+                                       (map #(vector %1 (clojure.string/lower-case %1)))
+                                       (sort-by second)
+                                       (map first)))]
+    (= (sort-words-ci "Have a nice day.")
+       ["a" "day" "Have" "nice"])
+    (= (sort-words-ci "Clojure is a fun language!")
+       ["a" "Clojure" "fun" "is" "language"])
+    (= (sort-words-ci "Fools fall for foolish follies.")
+       ["fall" "follies" "foolish" "Fools" "for"])))
