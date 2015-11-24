@@ -211,3 +211,22 @@
        ["a" "Clojure" "fun" "is" "language"])
     (= (sort-words-ci "Fools fall for foolish follies.")
        ["fall" "follies" "foolish" "Fools" "for"])))
+
+(defn problem-seventy-four
+  "Given a string of comma separated integers,
+  write a function which returns a new comma separated string that only contains the numbers which are perfect squares."
+  []
+  (let [filter-perfect-squares (fn [s]
+                                 (let [perfect-square? (fn [i]
+                                                         (some
+                                                           #(= i %)
+                                                           (map
+                                                             #(* % %)
+                                                             (range (dec i) 1 -1))))]
+                                   (->> (clojure.string/split s #",")
+                                        (map #(Integer/parseInt %))
+                                        (filter perfect-square?)
+                                        (clojure.string/join ","))))]
+
+    (= (filter-perfect-squares "4,5,6,7,8,9") "4,9")
+    (= (filter-perfect-squares "15,16,25,36,37") "16,25,36")))
