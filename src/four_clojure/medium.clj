@@ -230,3 +230,21 @@
 
     (= (filter-perfect-squares "4,5,6,7,8,9") "4,9")
     (= (filter-perfect-squares "15,16,25,36,37") "16,25,36")))
+
+(defn problem-seventy-five
+  "Two numbers are coprime if their greatest common divisor equals 1.
+  Euler's totient function f(x) is defined as the number of positive integers less than x which are coprime to x.
+  The special case f(1) equals 1. Write a function which calculates Euler's totient function."
+  []
+  (let [euler-totient (fn [x]
+                        (let [gcd (fn [a b] (if (= b 0) a (recur b (mod a b))))
+                              coprime? (fn [x y] (= 1 (gcd x y)))]
+                          (cond
+                            (= x 1) 1
+                            :else (->> (range 1 x)
+                                       (filter (partial coprime? x))
+                                       (count)))))]
+    (= (euler-totient 1) 1)
+    (= (euler-totient 10) (count '(1 3 7 9)) 4)
+    (= (euler-totient 40) 16)
+    (= (euler-totient 99) 60)))
