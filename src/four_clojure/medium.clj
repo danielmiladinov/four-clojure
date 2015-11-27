@@ -263,3 +263,39 @@
                      x
                      #(foo x (+ 2 y))))]
        (trampoline foo [] 1))))
+
+(defn problem-seventy-seven
+  "Write a function which finds all the anagrams in a vector of words.
+  A word x is an anagram of word y if all the letters in x can be rearranged in a different order to form y.
+  Your function should return a set of sets, where each sub-set is a group of words which are anagrams of each other.
+  Each sub-set should have at least two words. Words without any anagrams should not be included in the result."
+  []
+  (let [anagrams (fn [words]
+                   (letfn [(permute [arr]
+                             (let [conc (fn [x y] (vec (concat x (if (vector? y) y (vector y)))))
+                                   except-idx (fn [idx coll] (vec (concat (take idx coll) (nthrest coll (inc idx)))))]
+                               (reduce
+                                 (fn [a b] (conc (vec a) (vec b)))
+                                 (map-indexed
+                                   (fn [i v]
+                                     (let [prefix (vector v)
+                                           remainder (except-idx i arr)]
+                                       (map
+                                         (partial conc prefix)
+                                         (if (> (count remainder) 1)
+                                           (permute remainder)
+                                           remainder))))
+                                   arr))))]
+                     (let [permutations (map permute words)]
+                       (->>
+                         (map (fn [permuted]
+                                (->>
+                                  (map #(clojure.string/join "" %) permuted)
+                                  (filter (set words)))) permutations)
+                         (filter #(> (count %) 1))
+                         (map set)
+                         (set)))))]
+    (= (anagrams ["meat" "mat" "team" "mate" "eat"])
+       #{#{"meat" "team" "mate"}})
+    (= (anagrams ["veer" "lake" "item" "kale" "mite" "ever"])
+       #{#{"veer" "ever"} #{"lake" "kale"} #{"mite" "item"}})))
