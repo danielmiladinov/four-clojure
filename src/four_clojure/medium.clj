@@ -299,3 +299,21 @@
        #{#{"meat" "team" "mate"}})
     (= (anagrams ["veer" "lake" "item" "kale" "mite" "ever"])
        #{#{"veer" "ever"} #{"lake" "kale"} #{"mite" "item"}})))
+
+(defn problem-seventy-eight
+  "Reimplement the function described in 'Intro to Trampoline'."
+  []
+  (let [my-tramp (fn [f & args]
+                   (loop [thunk (apply f args)]
+                     (if (fn? thunk)
+                       (recur (thunk))
+                       thunk)))]
+    (= (letfn [(triple [x] #(sub-two (* 3 x)))
+               (sub-two [x] #(stop? (- x 2)))
+               (stop? [x] (if (> x 50) x #(triple x)))]
+         (my-tramp triple 2))
+       82)
+    (= (letfn [(my-even? [x] (if (zero? x) true #(my-odd? (dec x))))
+               (my-odd? [x] (if (zero? x) false #(my-even? (dec x))))]
+         (map (partial my-tramp my-even?) (range 6)))
+       [true false true false true false])))
