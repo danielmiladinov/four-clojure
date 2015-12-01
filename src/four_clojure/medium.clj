@@ -317,3 +317,18 @@
                (my-odd? [x] (if (zero? x) false #(my-even? (dec x))))]
          (map (partial my-tramp my-even?) (range 6)))
        [true false true false true false])))
+
+(defn problem-eighty
+  "A number is 'perfect' if the sum of its divisors equal the number itself.
+  6 is a perfect number because 1+2+3=6.
+  Write a function which returns true for perfect numbers and false otherwise."
+  []
+  (let [perfect? (fn [num]
+                   (->> (range (/ num 2))
+                        (filter #(= 0 (mod num %)))
+                        (apply +)
+                        (= num)))]
+    (= (perfect? 6) true)
+    (= (perfect? 7) false)
+    (= (perfect? 496) true)
+    (= (perfect? 500) false)))
