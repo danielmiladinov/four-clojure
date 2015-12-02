@@ -298,3 +298,14 @@
     (= (my-gcd 10 5) 5)
     (= (my-gcd 5 7) 1)
     (= (my-gcd 1023 858) 33)))
+
+(defn problem-eighty-one
+  "Write a function which returns the intersection of two sets.
+  The intersection is the sub-set of items that each set has in common."
+  []
+  (let [intersekshun (fn [a b]
+                       (reduce #(if (a %2) (conj %1 %2) %1) #{} b))]
+
+    (= (intersekshun #{0 1 2 3} #{2 3 4 5}) #{2 3})
+    (= (intersekshun #{0 1 2} #{3 4 5}) #{})
+    (= (intersekshun #{:a :b :c :d} #{:c :e :a :f :d}) #{:a :c :d})))
