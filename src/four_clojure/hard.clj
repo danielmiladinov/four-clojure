@@ -125,3 +125,64 @@
                           [9 9 2 4]
                           [4 6 6 7 8]
                           [5 7 3 5 1 4])))))
+
+(defn problem-eighty-two
+  "A word chain consists of a set of words ordered so that each word differs by only one letter
+  from the words directly before and after it. The one letter difference can be either an insertion, a deletion,
+  or a substitution. Here is an example word chain:
+
+  cat -> cot -> coat -> oat -> hat -> hot -> hog -> dog
+
+  Write a function which takes a sequence of words, and returns true if they can be arranged
+  into one continous word chain, and false if they cannot."
+  []
+  (let [chainable? (fn [word-set]
+                      (letfn [(permute [arr]
+                                (let [conc (fn [x y] (vec (concat x (if (vector? y) y (vector y)))))
+                                      except-idx (fn [idx coll] (vec (concat (take idx coll) (nthrest coll (inc idx)))))]
+                                  (reduce
+                                    (fn [a b] (conc (vec a) (vec b)))
+                                    (map-indexed
+                                      (fn [i v]
+                                        (let [prefix (vector v)
+                                              remainder (except-idx i arr)]
+                                          (map
+                                            (partial conc prefix)
+                                            (if (> (count remainder) 1)
+                                              (permute remainder)
+                                              remainder))))
+                                      arr))))
+
+                              (edit-distance [w1 w2]
+                                (letfn [(cell-value [same-char? prev-row cur-row col-idx]
+                                          (min (inc (nth prev-row col-idx))
+                                               (inc (last cur-row))
+                                               (+ (nth prev-row (dec col-idx)) (if same-char? 0 1))))]
+                                  (loop [row-idx  1
+                                         max-rows (inc (count w2))
+                                         prev-row (range (inc (count w1)))]
+                                    (if (= row-idx max-rows)
+                                      (last prev-row)
+                                      (let [ch2           (nth w2 (dec row-idx))
+                                            next-prev-row (reduce (fn [cur-row i]
+                                                                    (let [same-char? (= (nth w1 (dec i)) ch2)]
+                                                                      (conj cur-row (cell-value same-char?
+                                                                                                prev-row
+                                                                                                cur-row
+                                                                                                i))))
+                                                                  [row-idx] (range 1 (count prev-row)))]
+                                        (recur (inc row-idx) max-rows next-prev-row))))))]
+
+                        (->> (permute (into [] word-set))
+                             (filter (fn [permutation]
+                                       (every? (partial = 1)
+                                               (map (partial apply edit-distance)
+                                                    (partition 2 1 permutation)))))
+                             (count)
+                             (< 0))))]
+    (= true  (chainable? #{"hat" "coat" "dog" "cat" "oat" "cot" "hot" "hog"}))
+    (= false (chainable? #{"cot" "hot" "bat" "fat"}))
+    (= false (chainable? #{"to" "top" "stop" "tops" "toss"}))
+    (= true  (chainable? #{"spout" "do" "pot" "pout" "spot" "dot"}))
+    (= true  (chainable? #{"share" "hares" "shares" "hare" "are"}))
+    (= false (chainable? #{"share" "hares" "hare" "are"}))))
