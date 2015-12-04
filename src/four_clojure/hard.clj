@@ -186,3 +186,34 @@
     (= true  (chainable? #{"spout" "do" "pot" "pout" "spot" "dot"}))
     (= true  (chainable? #{"share" "hares" "shares" "hare" "are"}))
     (= false (chainable? #{"share" "hares" "hare" "are"}))))
+
+(defn problem-eighty-four
+  "Write a function which generates the transitive closure of a binary relation.
+  The relation will be represented as a set of 2 item vectors."
+  []
+  (let [transitive-closure (fn [pair-set]
+                             (let [pair-map (into {} pair-set)]
+                               (->> (map
+                                      (fn [pair]
+                                        (take-while
+                                          (fn [[_ v]] (not (nil? v)))
+                                          (iterate
+                                            (fn [[k v]]
+                                              (vector k (pair-map v)))
+                                            pair)))
+                                      pair-map)
+                                    (reduce concat)
+                                    (set))))]
+
+    (let [divides #{[8 4] [9 3] [4 2] [27 9]}]
+      (= (transitive-closure divides) #{[4 2] [8 4] [8 2] [9 3] [27 9] [27 3]}))
+    (let [more-legs
+          #{["cat" "man"] ["man" "snake"] ["spider" "cat"]}]
+      (= (transitive-closure more-legs)
+         #{["cat" "man"] ["cat" "snake"] ["man" "snake"]
+           ["spider" "cat"] ["spider" "man"] ["spider" "snake"]}))
+    (let [progeny
+          #{["father" "son"] ["uncle" "cousin"] ["son" "grandson"]}]
+      (= (transitive-closure progeny)
+         #{["father" "son"] ["father" "grandson"]
+           ["uncle" "cousin"] ["son" "grandson"]}))))
