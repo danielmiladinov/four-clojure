@@ -309,3 +309,16 @@
     (= (intersekshun #{0 1 2 3} #{2 3 4 5}) #{2 3})
     (= (intersekshun #{0 1 2} #{3 4 5}) #{})
     (= (intersekshun #{:a :b :c :d} #{:c :e :a :f :d}) #{:a :c :d})))
+
+(defn problem-eighty-three
+  "Write a function which takes a variable number of booleans.
+  Your function should return true if some of the parameters are true, but not all of the parameters are true.
+  Otherwise your function should return false."
+  []
+  (let [half-true? (fn [& args] (boolean (and (some true? args) (some false? args))))]
+    (= false (half-true? false false))
+    (= true (half-true? true false))
+    (= false (half-true? true))
+    (= true (half-true? false true false))
+    (= false (half-true? true true true))
+    (= true (half-true? true true true false))))
