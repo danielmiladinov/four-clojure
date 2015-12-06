@@ -332,3 +332,22 @@
     (= (perfect? 7) false)
     (= (perfect? 496) true)
     (= (perfect? 500) false)))
+
+(defn problem-eighty-five
+  "Write a function which generates the power set of a given set.
+  The power set of a set x is the set of all subsets of x, including the empty set and x itself."
+  []
+  (let [power-set (fn [s]
+                    (reduce (fn [ps e]
+                              (->>
+                                ps
+                                (map #(set (concat #{e} %)))
+                                (concat ps)
+                                set))
+                            #{#{}}
+                            s))]
+    (= (power-set #{1 :a}) #{#{1 :a} #{:a} #{} #{1}})
+    (= (power-set #{}) #{#{}})
+    (= (power-set #{1 2 3})
+       #{#{} #{1} #{2} #{3} #{1 2} #{1 3} #{2 3} #{1 2 3}})
+    (= (count (power-set (into #{} (range 10)))) 1024)))
