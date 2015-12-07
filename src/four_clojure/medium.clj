@@ -351,3 +351,22 @@
     (= (power-set #{1 2 3})
        #{#{} #{1} #{2} #{3} #{1 2} #{1 3} #{2 3} #{1 2 3}})
     (= (count (power-set (into #{} (range 10)))) 1024)))
+
+(defn problem-eighty-six
+  "Happy numbers are positive integers that follow a particular formula: take each individual digit, square it,
+  and then sum the squares to get a new number. Repeat with the new number and eventually,
+  you might get to a number whose squared sum is 1. This is a happy number.
+  An unhappy number (or sad number) is one that loops endlessly.
+  Write a function that determines if a number is happy or not."
+  []
+  (let [happy-number? (fn [number]
+                        (let [square (fn [x] (let [y (Integer/parseInt (.toString x))] (* y y)))
+                              happy  (fn [x] (->> x (str) (seq) (map square) (apply +)))]
+                          (loop [seen #{}, n (happy number)]
+                            (if (and (not (seen n)) (> n 1))
+                              (recur (conj seen n) (happy n))
+                              (= 1 n)))))]
+    (= (happy-number? 7) true)
+    (= (happy-number? 986543210) true)
+    (= (happy-number? 2) false)
+    (= (happy-number? 3) false)))
