@@ -217,3 +217,45 @@
       (= (transitive-closure progeny)
          #{["father" "son"] ["father" "grandson"]
            ["uncle" "cousin"] ["son" "grandson"]}))))
+
+(defn problem-eighty-nine
+  "Starting with a graph you must write a function that returns true
+  if it is possible to make a tour of the graph in which every edge is visited exactly once.
+
+  The graph is represented by a vector of tuples, where each tuple represents a single edge.
+
+  The rules are:
+
+  - You can start at any node.
+  - You must visit each edge exactly once.
+  - All edges are undirected."
+  []
+  (let [tourable? (fn tourable? [nodes]
+                    (let [node-has? (fn [node edge] (some #(= edge %) node))
+                          except-idx (fn [idx coll] (vec (concat (take idx coll) (nthrest coll (inc idx)))))]
+                      (cond
+                        (= (count nodes) 0) false
+                        (= (count nodes) 1) true
+                        :else (every?
+                                true?
+                                (map-indexed
+                                  (fn all-edges-connected-and-even-degree [i node]
+                                    (let [a (first node)
+                                          b (second node)
+                                          degree-of-edges (count (filter #(or
+                                                                           (node-has? % a)
+                                                                           (node-has? % b))
+                                                                         (except-idx i nodes)))]
+                                      (and
+                                        (> degree-of-edges 0)
+                                        (even? degree-of-edges))))
+                                  nodes)))))]
+    (= true  (tourable? [[:a :b]]))
+    (= false (tourable? [[:a :a] [:b :b]]))
+    (= false (tourable? [[:a :b] [:a :b] [:a :c] [:c :a]
+                         [:a :d] [:b :d] [:c :d]]))
+    (= true  (tourable? [[1 2] [2 3] [3 4] [4 1]]))
+    (= true  (tourable? [[:a :b] [:a :c] [:c :b] [:a :e]
+                         [:b :e] [:a :d] [:b :d] [:c :e]
+                         [:d :e] [:c :f] [:d :f]]))
+    (= false (tourable? [[1 2] [2 3] [2 4] [2 5]]))))
