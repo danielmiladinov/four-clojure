@@ -335,3 +335,16 @@
     (= (symmetric-difference #{:a :b :c} #{}) #{:a :b :c})
     (= (symmetric-difference #{} #{4 5 6}) #{4 5 6})
     (= (symmetric-difference #{[1 2] [2 3]} #{[2 3] [3 4]}) #{[1 2] [3 4]})))
+
+(defn problem-ninety
+  "Write a function which calculates the Cartesian product of two sets."
+  []
+  (let [cartesian-product (fn cartesian-product [set-a set-b] (set (for [a set-a b set-b] [a b])))]
+
+    (= (cartesian-product #{"ace" "king" "queen"} #{"♠" "♥" "♦" "♣"})
+       #{["ace" "♠"] ["ace" "♥"] ["ace" "♦"] ["ace" "♣"]
+         ["king" "♠"] ["king" "♥"] ["king" "♦"] ["king" "♣"]
+         ["queen" "♠"] ["queen" "♥"] ["queen" "♦"] ["queen" "♣"]})
+    (= (cartesian-product #{1 2 3} #{4 5})
+       #{[1 4] [2 4] [3 4] [1 5] [2 5] [3 5]})
+    (= 300 (count (cartesian-product (into #{} (range 10)) (into #{} (range 30)))))))
