@@ -259,3 +259,42 @@
                          [:b :e] [:a :d] [:b :d] [:c :e]
                          [:d :e] [:c :f] [:d :f]]))
     (= false (tourable? [[1 2] [2 3] [2 4] [2 5]]))))
+
+(defn problem-ninety-one
+  "Given a graph, determine whether the graph is connected.
+  A connected graph is such that a path exists between any two given nodes.
+
+  -Your function must return true if the graph is connected and false otherwise.
+
+  -You will be given a set of tuples representing the edges of a graph.
+  Each member of a tuple being a vertex/node in the graph.
+
+  -Each edge is undirected (can be traversed either direction)."
+  []
+  (let [connected? (fn [nodes-set]
+                     (let [nodes (reduce #(conj (conj %1 (first %2)) (second %2)) #{} nodes-set)
+                           nodes-map (into {} (map-indexed #(vector %2 %1) nodes))
+                           index-of (fn [node] (get nodes-map node))
+                           edges (concat nodes-set (map #(apply vector (reverse %)) nodes-set))
+                           grouped-edges (group-by (comp index-of first) edges)
+                           destinations (fn [node] (map second (get grouped-edges (index-of node))))
+                           walk-graph (fn walk
+                                        ([node] (walk #{} (hash-set node)))
+                                        ([result walked]
+                                         (if (zero? (count walked))
+                                           result
+                                           (let [current (first walked)
+                                                 next-result (conj result current)
+                                                 new-nodes (filter #(not (contains? next-result %)) (destinations current))]
+                                             (walk next-result (reduce conj (into #{} (rest walked)) new-nodes))))))]
+                       (= nodes (walk-graph (ffirst nodes-set)))))]
+    (= true  (connected? #{[:a :a]}))
+    (= true  (connected? #{[:a :b]}))
+    (= false (connected? #{[1 2] [2 3] [3 1]
+                           [4 5] [5 6] [6 4]}))
+    (= true  (connected? #{[1 2] [2 3] [3 1]
+                           [4 5] [5 6] [6 4] [3 4]}))
+    (= false (connected? #{[:a :b] [:b :c] [:c :d]
+                           [:x :y] [:d :a] [:b :e]}))
+    (= true  (connected? #{[:a :b] [:b :c] [:c :d]
+                           [:x :y] [:d :a] [:b :e] [:x :a]}))))
