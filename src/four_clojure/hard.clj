@@ -298,3 +298,37 @@
                            [:x :y] [:d :a] [:b :e]}))
     (= true  (connected? #{[:a :b] [:b :c] [:c :d]
                            [:x :y] [:d :a] [:b :e] [:x :a]}))))
+
+(defn problem-ninety-two
+  "Roman numerals are easy to recognize, but not everyone knows all the rules necessary to work with them.
+  Write a function to parse a Roman-numeral string and return the number it represents.
+
+  You can assume that the input will be well-formed, in upper-case, and follow the subtractive principle.
+  You don't need to handle any numbers greater than MMMCMXCIX (3999),
+  the largest number representable with ordinary letters."
+  []
+  (let [to-arabic (fn [roman]
+                    (let [in-arabic {\I 1,
+                                     \V 5,
+                                     \X 10,
+                                     \L 50,
+                                     \C 100,
+                                     \D 500,
+                                     \M 1000 }
+                          chars (seq roman)]
+                      (first
+                        (reduce
+                          (fn [[sum prev-r] curr-r]
+                            (let [curr-a (in-arabic curr-r)
+                                  prev-a (in-arabic prev-r)]
+                              (if (nil? prev-r)
+                                [curr-a curr-r]
+                                (let [next-a   (if (> curr-a prev-a) (- curr-a (* 2 prev-a)) curr-a)
+                                      next-sum (+ sum next-a)]
+                                  [next-sum curr-r]))))
+                          [0 nil]
+                          chars))))]
+    (= 14   (to-arabic "XIV"))
+    (= 827  (to-arabic "DCCCXXVII"))
+    (= 3999 (to-arabic "MMMCMXCIX"))
+    (= 48   (to-arabic "XLVIII"))))
