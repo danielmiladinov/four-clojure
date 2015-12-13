@@ -370,3 +370,19 @@
     (= (happy-number? 986543210) true)
     (= (happy-number? 2) false)
     (= (happy-number? 3) false)))
+
+(defn problem-ninety-three
+  "Write a function which flattens any nested combination of sequential things (lists, vectors, etc.),
+  but maintains the lowest level sequential items.
+  The result should be a sequence of sequences with only one level of nesting."
+  []
+  (let [partial-flatten (fn partial-flatten [coll]
+                          (if (every? sequential? coll)
+                            (mapcat partial-flatten coll)
+                            [coll]))]
+    (= (partial-flatten [["Do"] ["Nothing"]])
+       [["Do"] ["Nothing"]])
+    (= (partial-flatten [[[[:a :b]]] [[:c :d]] [:e :f]])
+       [[:a :b] [:c :d] [:e :f]])
+    (= (partial-flatten '((1 2) ((3 4) ((((5 6)))))))
+       '((1 2)(3 4)(5 6)))))
