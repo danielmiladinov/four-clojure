@@ -332,3 +332,86 @@
     (= 827  (to-arabic "DCCCXXVII"))
     (= 3999 (to-arabic "MMMCMXCIX"))
     (= 48   (to-arabic "XLVIII"))))
+
+(defn problem-ninety-four
+  "The game of life is a cellular automaton devised by mathematician John Conway.
+
+  The 'board' consists of both live (#) and dead ( ) cells. Each cell interacts with its eight neighbours
+  (horizontal, vertical, diagonal), and its next state is dependent on the following rules:
+
+  1) Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+  2) Any live cell with two or three live neighbours lives on to the next generation.
+  3) Any live cell with more than three live neighbours dies, as if by overcrowding.
+  4) Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
+  Write a function that accepts a board, and returns a board representing the next generation of cells."
+  []
+  (let [life (fn [board]
+               (let [live-cell \#
+                     dead-cell \space
+                     live? (fn [cell] (= live-cell cell))
+                     neighbors (fn [x y]
+                                 (let [spread (fn [x] [(dec x) x (inc x)])
+                                       coords (filter
+                                                #(not= [x y] %)
+                                                (for [a (spread x)
+                                                      b (spread y)]
+                                                  [a b]))]
+                                   (filter (complement nil?)
+                                           (map
+                                             (fn [[a b]]
+                                               (when-let [_ (contains? board a)]
+                                                 (when-let [_ (contains? (vec (board a)) b)]
+                                                   ((vec (board a)) b))))
+                                             coords))))]
+                 (map-indexed
+                   (fn [r row]
+                     (apply
+                       str
+                       (map-indexed
+                         (fn [c cell]
+                           (let [live-neighbors (count (filter live? (neighbors r c)))]
+                             (if (live? cell)
+                               (cond
+                                 (< live-neighbors 2) dead-cell
+                                 (> live-neighbors 3) dead-cell
+                                 :else live-cell)
+                               (if (= 3 live-neighbors)
+                                 live-cell
+                                 dead-cell))))
+                         row)))
+                   board)))]
+    (= (life ["      "
+              " ##   "
+              " ##   "
+              "   ## "
+              "   ## "
+              "      "])
+       ["      "
+        " ##   "
+        " #    "
+        "    # "
+        "   ## "
+        "      "])
+    (= (life ["     "
+              "     "
+              " ### "
+              "     "
+              "     "])
+       ["     "
+        "  #  "
+        "  #  "
+        "  #  "
+        "     "])
+    (= (life ["      "
+              "      "
+              "  ### "
+              " ###  "
+              "      "
+              "      "])
+       ["      "
+        "   #  "
+        " #  # "
+        " #  # "
+        "  #   "
+        "      "])))
