@@ -348,3 +348,28 @@
     (= (cartesian-product #{1 2 3} #{4 5})
        #{[1 4] [2 4] [3 4] [1 5] [2 5] [3 5]})
     (= 300 (count (cartesian-product (into #{} (range 10)) (into #{} (range 30)))))))
+
+(defn problem-ninety-five
+  "Write a predicate which checks whether or not a given sequence represents a binary tree.
+  Each node in the tree must have a value, a left child, and a right child."
+  []
+  (let [tree? (fn tree? [coll]
+                (or (nil? coll)
+                    (and (sequential? coll)
+                         (= 3 (count coll))
+                         (tree? (nth coll 1))
+                         (tree? (nth coll 2)))))]
+    (= (tree? '(:a (:b nil nil) nil))
+       true)
+    (= (tree? '(:a (:b nil nil)))
+       false)
+    (= (tree? [1 nil [2 [3 nil nil] [4 nil nil]]])
+       true)
+    (= (tree? [1 [2 nil nil] [3 nil nil] [4 nil nil]])
+       false)
+    (= (tree? [1 [2 [3 [4 nil nil] nil] nil] nil])
+       true)
+    (= (tree? [1 [2 [3 [4 false nil] nil] nil] nil])
+       false)
+    (= (tree? '(:a nil ()))
+       false)))
