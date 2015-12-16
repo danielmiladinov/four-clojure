@@ -373,3 +373,31 @@
        false)
     (= (tree? '(:a nil ()))
        false)))
+
+(defn problem-ninety-six
+  "Let us define a binary tree as 'symmetric' if the left half of the tree is the mirror image
+  of the right half of the tree.
+  Write a predicate to determine whether or not a given binary tree is symmetric.
+  (see To Tree, or not to Tree for a reminder on the tree representation we're using)."
+  []
+  (let [symmetric? (fn symmetric? [tree]
+                     (let [value (fn [t] (nth t 0))
+                           left  (fn [t] (nth t 1))
+                           right (fn [t] (nth t 2))
+                           flip  (fn flip [t]
+                                   (if (nil? t)
+                                     t
+                                     [(value t) (flip (right t)) (flip (left t))]))]
+                       (= tree (flip tree))))]
+    (= (symmetric? '(:a (:b nil nil) (:b nil nil))) true)
+    (= (symmetric? '(:a (:b nil nil) nil)) false)
+    (= (symmetric? '(:a (:b nil nil) (:c nil nil))) false)
+    (= (symmetric? [1 [2 nil [3 [4 [5 nil nil] [6 nil nil]] nil]]
+            [2 [3 nil [4 [6 nil nil] [5 nil nil]]] nil]])
+       true)
+    (= (symmetric? [1 [2 nil [3 [4 [5 nil nil] [6 nil nil]] nil]]
+            [2 [3 nil [4 [5 nil nil] [6 nil nil]]] nil]])
+       false)
+    (= (symmetric? [1 [2 nil [3 [4 [5 nil nil] [6 nil nil]] nil]]
+            [2 [3 nil [4 [6 nil nil] nil]] nil]])
+       false)))
