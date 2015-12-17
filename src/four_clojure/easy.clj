@@ -401,3 +401,30 @@
     (= (symmetric? [1 [2 nil [3 [4 [5 nil nil] [6 nil nil]] nil]]
             [2 [3 nil [4 [6 nil nil] nil]] nil]])
        false)))
+
+(defn problem-ninety-seven
+  "Pascal's triangle is a triangle of numbers computed using the following rules:
+
+  - The first row is 1.
+  - Each successive row is computed by adding together adjacent numbers in the row above,
+    and adding a 1 to the beginning and end of the row.
+
+  Write a function which returns the nth row of Pascal's Triangle."
+  []
+  (let [pascal-row (fn pascal-row [n]
+                     (cond
+                       (= n 1) [1]
+                       :else (let [end [1]
+                                   middle (map
+                                            (partial apply +)
+                                            (partition 2 1 (pascal-row (dec n))))]
+                               (concat end middle end))))]
+    (= (pascal-row 1) [1])
+    (= (map pascal-row (range 1 6))
+       [    [1]
+           [1 1]
+          [1 2 1]
+         [1 3 3 1]
+        [1 4 6 4 1]])
+    (= (pascal-row 11)
+       [1 10 45 120 210 252 210 120 45 10 1])))
