@@ -386,3 +386,22 @@
        [[:a :b] [:c :d] [:e :f]])
     (= (partial-flatten '((1 2) ((3 4) ((((5 6)))))))
        '((1 2)(3 4)(5 6)))))
+
+(defn problem-ninety-eight
+  "A function f defined on a domain D induces an equivalence relation on D, as follows:
+  a is equivalent to b with respect to f if and only if (f a) is equal to (f b).
+  Write a function with arguments f and D that computes the equivalence classes of D with respect to f."
+  []
+  (let [equivalence-classes (fn [f d]
+                              (->> (group-by f d)
+                                   (vals)
+                                   (map set)
+                                   (set)))]
+    (= (equivalence-classes #(* % %) #{-2 -1 0 1 2})
+       #{#{0} #{1 -1} #{2 -2}})
+    (= (equivalence-classes #(rem % 3) #{0 1 2 3 4 5})
+       #{#{0 3} #{1 4} #{2 5}})
+    (= (equivalence-classes identity #{0 1 2 3 4})
+       #{#{0} #{1} #{2} #{3} #{4}})
+    (= (equivalence-classes (constantly true) #{0 1 2 3 4})
+       #{#{0 1 2 3 4}})))
