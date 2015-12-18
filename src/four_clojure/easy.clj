@@ -428,3 +428,16 @@
         [1 4 6 4 1]])
     (= (pascal-row 11)
        [1 10 45 120 210 252 210 120 45 10 1])))
+
+(defn problem-ninety-nine
+  "Write a function which multiplies two numbers and returns the result as a sequence of its digits."
+  []
+  (let [product-digits (fn [a b]
+                         (->> (* a b)
+                              (str)
+                              (seq)
+                              (map str)
+                              (map #(Integer/parseInt %))))]
+    (= (product-digits 1 1) [1])
+    (= (product-digits 99 9) [8 9 1])
+    (= (product-digits 999 99) [9 8 9 0 1])))
