@@ -415,3 +415,46 @@
         " #  # "
         "  #   "
         "      "])))
+
+(defn problem-one-hundred-one
+  "Given two sequences x and y, calculate the Levenshtein distance of x and y,
+  i. e. the minimum number of edits needed to transform x into y.
+  The allowed edits are:
+
+  - insert a single item
+  - delete a single item
+  - replace a single item with another item
+
+  WARNING: Some of the test cases may timeout if you write an inefficient solution!"
+  []
+  (let [levenshtein (fn [w1 w2]
+                      (letfn [(cell-value [same-char? prev-row cur-row col-idx]
+                                (min (inc (nth prev-row col-idx))
+                                     (inc (last cur-row))
+                                     (+ (nth prev-row (dec col-idx)) (if same-char? 0 1))))]
+                        (loop [row-idx 1
+                               max-rows (inc (count w2))
+                               prev-row (range (inc (count w1)))]
+                          (if (= row-idx max-rows)
+                            (last prev-row)
+                            (let [ch2 (nth w2 (dec row-idx))
+                                  next-prev-row (reduce (fn [cur-row i]
+                                                          (let [same-char? (= (nth w1 (dec i)) ch2)]
+                                                            (conj cur-row (cell-value same-char?
+                                                                                      prev-row
+                                                                                      cur-row
+                                                                                      i))))
+                                                        [row-idx] (range 1 (count prev-row)))]
+                              (recur (inc row-idx) max-rows next-prev-row))))))]
+    (= (levenshtein "kitten" "sitting") 3)
+    (= (levenshtein "closure" "clojure")
+       (levenshtein "clojure" "closure") 1)
+    (= (levenshtein "xyx" "xyyyx") 2)
+    (= (levenshtein "" "123456") 6)
+    (= (levenshtein "Clojure" "Clojure")
+       (levenshtein "" "")
+       (levenshtein [] []) 0)
+    (= (levenshtein [1 2 3 4] [0 2 3 4 5]) 2)
+    (= (levenshtein '(:a :b :c :d) '(:a :d)) 2)
+    (= (levenshtein "ttttattttctg" "tcaaccctaccat") 10)
+    (= (levenshtein "gaattctaatctc" "caaacaaaaaattt") 9)))
