@@ -441,3 +441,22 @@
     (= (product-digits 1 1) [1])
     (= (product-digits 99 9) [8 9 1])
     (= (product-digits 999 99) [9 8 9 0 1])))
+
+(defn problem-one-hundred
+  "Write a function which calculates the least common multiple.
+  Your function should accept a variable number of positive integers or ratios."
+  []
+  (let [least-common-multiple (fn [& args]
+                                (let [gcd (fn [a b]
+                                            (if (= b 0)
+                                              a
+                                              (recur b (mod a b))))
+                                      lcm (fn [a b]
+                                            (/ (* a b) (gcd a b)))]
+                                  (reduce lcm args)))]
+    (== (least-common-multiple 2 3) 6)
+    (== (least-common-multiple 5 3 7) 105)
+    (== (least-common-multiple 1/3 2/5) 2)
+    (== (least-common-multiple 3/4 1/6) 3/2)
+    (== (least-common-multiple 7 5/7 2 3/5) 210)))
+
