@@ -405,3 +405,19 @@
        #{#{0} #{1} #{2} #{3} #{4}})
     (= (equivalence-classes (constantly true) #{0 1 2 3 4})
        #{#{0 1 2 3 4}})))
+
+(defn problem-one-hundred-two
+  "When working with java, you often need to create an object with fieldsLikeThis,
+  but you'd rather work with a hashmap that has :keys-like-this until it's time to convert.
+  Write a function which takes lower-case hyphen-separated strings and converts them to camel-case strings."
+  []
+  (let [into-camel-case (fn [s]
+                          (let [parts (clojure.string/split s #"-")
+                                ucfirst (fn [w]
+                                          (str
+                                            (.toUpperCase (str (first w)))
+                                            (apply str (rest w))))]
+                            (str (first parts) (map ucfirst (rest parts)))))]
+    (= (into-camel-case "multi-word-key") "multiWordKey")
+    (= (into-camel-case "something") "something")
+    (= (into-camel-case "leaveMeAlone") "leaveMeAlone")))
