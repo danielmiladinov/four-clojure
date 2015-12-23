@@ -447,3 +447,48 @@
     (= (k-combinations 4 #{[1 2 3] :a "abc" "efg"}) #{#{[1 2 3] :a "abc" "efg"}})
     (= (k-combinations 2 #{[1 2 3] :a "abc" "efg"}) #{#{[1 2 3] :a} #{[1 2 3] "abc"} #{[1 2 3] "efg"}
                                                       #{:a "abc"} #{:a "efg"} #{"abc" "efg"}})))
+
+(defn problem-one-hundred-four
+  "This is the inverse of Problem 92, but much easier.
+  Given an integer smaller than 4000, return the corresponding roman numeral in uppercase,
+  adhering to the subtractive principle."
+  []
+  (let [to-roman (fn [arabic]
+                   (let [ones           [1    \I \V \X]
+                         tens           [10   \X \L \C]
+                         hundreds       [100  \C \D \M]
+                         thousands      [1000 \M]
+                         symbol-pattern (fn ([ones-symbol times]
+                                             (apply str (repeat times ones-symbol)))
+                                            ([ones-symbol fives-symbol tens-symbol magnitude-value]
+                                             (let [pattern {1 [ones-symbol                                      ]
+                                                            2 [ones-symbol  ones-symbol                         ]
+                                                            3 [ones-symbol  ones-symbol  ones-symbol            ]
+                                                            4 [ones-symbol  fives-symbol                        ]
+                                                            5 [fives-symbol                                     ]
+                                                            6 [fives-symbol ones-symbol                         ]
+                                                            7 [fives-symbol ones-symbol  ones-symbol            ]
+                                                            8 [fives-symbol ones-symbol  ones-symbol ones-symbol]
+                                                            9 [ones-symbol  tens-symbol                         ]}]
+                                               (apply str (get pattern magnitude-value)))))]
+                     (apply
+                       str
+                       (map
+                         (fn get-symbol [pattern]
+                           (let [[magnitude & chars] pattern
+                                 value (if (>= arabic magnitude)
+                                         (quot (mod arabic (* magnitude 10)) magnitude)
+                                         0)
+                                 args (conj (vec chars) value)]
+                             (apply symbol-pattern args)))
+                         [thousands
+                          hundreds
+                          tens
+                          ones]))))]
+    (= "I" (to-roman 1))
+    (= "XXX" (to-roman 30))
+    (= "IV" (to-roman 4))
+    (= "CXL" (to-roman 140))
+    (= "DCCCXXVII" (to-roman 827))
+    (= "MMMCMXCIX" (to-roman 3999))
+    (= "XLVIII" (to-roman 48))))
