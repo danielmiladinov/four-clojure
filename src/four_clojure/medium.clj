@@ -492,3 +492,31 @@
     (= "DCCCXXVII" (to-roman 827))
     (= "MMMCMXCIX" (to-roman 3999))
     (= "XLVIII" (to-roman 48))))
+
+(defn problem-one-hundred-five
+  "Given an input sequence of keywords and numbers, create a map such that each key in the map is a keyword,
+  and the value is a sequence of all the numbers (if any) between it and the next keyword in the sequence."
+  []
+  (let [mapify-keywords (fn [coll]
+                          (->> coll
+                               (reduce
+                                 (fn fold-seq-into-map [[map last-keyword] next-value]
+                                   (if (keyword? next-value)
+                                     [(assoc map next-value []) next-value]
+                                     [(update-in map [last-keyword] #(conj % next-value)) last-keyword]))
+                                 [{} nil])
+                               (first)))]
+    (= {} (mapify-keywords []))
+    (= {:a [1]} (mapify-keywords [:a 1]))
+    (= {:a [1], :b [2]} (mapify-keywords [:a 1, :b 2]))
+    (= {:a [1 2 3], :b [], :c [4]} (mapify-keywords [:a 1 2 3 :b :c 4]))))
+
+(fn [coll]
+  (->> coll
+       (reduce
+         (fn fold-seq-into-map [[map last-keyword] next-value]
+           (if (keyword? next-value)
+             [(assoc map next-value []) next-value]
+             [(update-in map [last-keyword] #(conj % next-value)) last-keyword]))
+         [{} nil])
+       (first)))
