@@ -458,3 +458,37 @@
     (= (levenshtein '(:a :b :c :d) '(:a :d)) 2)
     (= (levenshtein "ttttattttctg" "tcaaccctaccat") 10)
     (= (levenshtein "gaattctaatctc" "caaacaaaaaattt") 9)))
+
+(defn problem-one-hundred-six
+  "Given a pair of numbers, the start and end point, find a path between the two using only three possible operations:
+
+  * double
+  * halve (odd numbers cannot be halved)
+  * add 2
+
+  Find the shortest path through the 'maze'.
+  Because there are multiple shortest paths, you must return the length of the shortest path, not the path itself."
+  []
+  (let [shortest-path-length (fn [a b]
+                               (letfn [(double   [x] (* 2 x))
+                                       (halve    [x] (if (zero? x) x (when (even? x) (quot x 2))))
+                                       (add-two  [x] (+ 2 x))
+                                       (next-leg [x]
+                                         (map #(% x)
+                                              (if (even? x)
+                                                [double halve add-two]
+                                                [double add-two])))
+                                       (search [seen goal length]
+                                         (if (seen goal)
+                                           length
+                                           (recur
+                                             (reduce into #{} (map next-leg seen))
+                                             goal
+                                             (inc length))))]
+                                 (search #{a} b 1)))]
+    (= 1 (shortest-path-length 1 1))                        ; 1
+    (= 3 (shortest-path-length 3 12))                       ; 3 6 12
+    (= 3 (shortest-path-length 12 3))                       ; 12 6 3
+    (= 3 (shortest-path-length 5 9))                        ; 5 7 9
+    (= 9 (shortest-path-length 9 2))                        ; 9 18 20 10 12 6 8 4 2
+    (= 5 (shortest-path-length 9 12))))                     ; 9 11 22 24 12)
