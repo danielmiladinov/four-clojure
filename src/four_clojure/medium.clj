@@ -520,3 +520,39 @@
              [(update-in map [last-keyword] #(conj % next-value)) last-keyword]))
          [{} nil])
        (first)))
+
+(defn problem-one-hundred-eight
+  "Given any number of sequences, each sorted from smallest to largest,
+  find the smallest single number which appears in all of the sequences.
+  The sequences may be infinite, so be careful to search lazily."
+  []
+  (let [search-lazily (fn [& seqs]
+                        (if (= 1 (count seqs))
+                          (ffirst seqs)
+
+                          (loop [lazy-seqs (vec (map #(lazy-seq %) seqs))
+                                 lazy-seen (vec (map (comp sorted-set first) lazy-seqs))]
+
+                            (let [intersection (apply clojure.set/intersection lazy-seen)]
+
+                              (if (not (empty? intersection))
+
+                                (first intersection)
+
+                                (let [[min-seq-idx _] (->> (map-indexed #(vector %1 (apply max %2)) lazy-seen)
+                                                           (sort-by second)
+                                                           (first))
+                                      curr-set (lazy-seen min-seq-idx)
+                                      curr-seq (lazy-seqs min-seq-idx)
+                                      next-seq (lazy-seq (rest curr-seq))
+                                      next-val (first next-seq)
+                                      next-set (conj curr-set next-val)]
+
+                                  (recur (assoc lazy-seqs min-seq-idx next-seq)
+                                         (assoc lazy-seen min-seq-idx next-set))))))))]
+    (= 3 (search-lazily [3 4 5]))
+    (= 4 (search-lazily [1 2 3 4 5 6 7] [0.5 3/2 4 19]))
+    (= 7 (search-lazily (range) (range 0 100 7/6) [2 3 5 7 11 13]))
+    (= 64 (search-lazily (map #(* % % %) (range))                       ;; perfect cubes
+                         (filter #(zero? (bit-and % (dec %))) (range))  ;; powers of 2
+                         (iterate inc 20)))))                           ;; at least as large as 20
