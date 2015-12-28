@@ -556,3 +556,33 @@
     (= 64 (search-lazily (map #(* % % %) (range))                       ;; perfect cubes
                          (filter #(zero? (bit-and % (dec %))) (range))  ;; powers of 2
                          (iterate inc 20)))))                           ;; at least as large as 20
+
+(defn one-hundred-ten
+  "Write a function that returns a lazy sequence of 'pronunciations' of a sequence of numbers.
+  A pronunciation of each element in the sequence consists of the number
+  of repeating identical numbers and the number itself.
+
+  For example, [1 1] is pronounced as [2 1] ('two ones'), which in turn is pronounced as [1 2 1 1] ('one two, one one').
+
+  Your function should accept an initial sequence of numbers, and return an infinite lazy sequence of pronunciations,
+  each element being a pronunciation of the previous element."
+  []
+  (let [pronunciations (fn [nums]
+                         (letfn [(next-pronunciation [n]
+                                   (let [nums (seq n)]
+                                     (if (= 1 (count nums))
+                                       [1 (first nums)]
+                                       (->> (reduce
+                                              (fn [[acc count prev] next]
+                                                (if (= prev next)
+                                                  [acc (inc count) prev]
+                                                  [(conj acc count prev) 1 next]))
+                                              [[] 1 (first nums)]
+                                              (next nums))
+                                            (flatten)
+                                            (vec)))))]
+                           (drop 1 (iterate next-pronunciation nums))))]
+    (= [[1 1] [2 1] [1 2 1 1]] (take 3 (pronunciations [1])))
+    (= [3 1 2 4] (first (pronunciations [1 1 1 4 4])))
+    (= [1 1 1 3 2 1 3 2 1 1] (nth (pronunciations [1]) 6))
+    (= 338 (count (nth (pronunciations [3 2]) 15)))))
