@@ -492,3 +492,76 @@
     (= 3 (shortest-path-length 5 9))                        ; 5 7 9
     (= 9 (shortest-path-length 9 2))                        ; 9 18 20 10 12 6 8 4 2
     (= 5 (shortest-path-length 9 12))))                     ; 9 11 22 24 12)
+
+(defn problem-one-hundred-eleven
+  "Write a function that takes a string and a partially-filled crossword puzzle board,
+  and determines if the input string can be legally placed onto the board.
+
+  The crossword puzzle board consists of a collection of partially-filled rows.
+  Empty spaces are denoted with an underscore (_), unusable spaces are denoted with a hash symbol (#),
+  and pre-filled spaces have a character in place; the whitespace characters are for legibility and should be ignored.
+
+  For a word to be legally placed on the board:
+  - It may use empty spaces (underscores)
+  - It may use but must not conflict with any pre-filled characters.
+  - It must not use any unusable spaces (hashes).
+  - There must be no empty spaces (underscores) or extra characters before or after the word
+    (the word may be bound by unusable spaces though).
+  - Characters are not case-sensitive.
+  - Words may be placed vertically (proceeding top-down only), or horizontally (proceeding left-right only)."
+  []
+  (let [word-fits? (fn [word board]
+                     (let [vectorize (fn [row-string]
+                                       (->> (clojure.string/split row-string #"")
+                                            (remove #(= " " %))
+                                            (remove empty?)
+                                            (vec)))
+
+                           rows (map vectorize board)
+                           cols (map (fn [i]
+                                       (vec
+                                         (map #(nth % i) rows)))
+                                     (range (count (first rows))))
+
+                           letters (vectorize word)
+                           word-length (count letters)
+
+                           slots (->> (concat rows cols)
+                                      (mapcat (partial partition-by (partial = "#")))
+                                      (remove (partial = ["#"]))
+                                      (remove #(not= word-length (count %)))
+                                      (map vec)
+                                      (vec))
+
+                           pairs-series (map
+                                          (fn zip-word-and-slot [slot]
+                                            (map vector letters slot))
+                                          slots)
+
+                           solutions (map
+                                       (fn pairs-valid? [pairs]
+                                         (every?
+                                           (fn pair-valid? [[wrd slt]]
+                                             (or (= slt "_")
+                                                 (= wrd slt))) pairs))
+                                       pairs-series)]
+
+                       (boolean (some true? solutions))))]
+
+    (= true (word-fits? "the" ["_ # _ _ e"]))
+
+    (= false (word-fits? "the" ["c _ _ _"
+                                "d _ # e"
+                                "r y _ _"]))
+
+    (= true (word-fits? "joy" ["c _ _ _"
+                               "d _ # e"
+                               "r y _ _"]))
+
+    (= false (word-fits? "joy" ["c o n j"
+                                "_ _ y _"
+                                "r _ _ #"]))
+
+    (= true (word-fits? "clojure" ["_ _ _ # j o y"
+                                   "_ _ o _ _ _ _"
+                                   "_ _ f _ # _ _"]))))
