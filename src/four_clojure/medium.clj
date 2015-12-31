@@ -586,3 +586,42 @@
     (= [3 1 2 4] (first (pronunciations [1 1 1 4 4])))
     (= [1 1 1 3 2 1 3 2 1 1] (nth (pronunciations [1]) 6))
     (= 338 (count (nth (pronunciations [3 2]) 15)))))
+
+(defn problem-one-hundred-twelve
+  "Create a function which takes an integer and a nested collection of integers as arguments.
+  Analyze the elements of the input collection and return a sequence which maintains the nested structure,
+  and which includes all elements starting from the head whose sum is less than or equal to the input integer."
+  []
+  (let [coll-up-to-sum (fn coll-up-to-sum [limit nums]
+                         (letfn [(coll-sum [coll] (apply + (flatten coll)))
+                                 (go [sum src dst]
+                                   (let [cur (first src)]
+                                     (cond
+                                       (nil? cur) dst
+
+                                       (coll? cur)
+                                         (let [nxt (go sum cur [])
+                                               nxt-sum (coll-sum next)]
+                                           (if (>= limit (+ sum nxt-sum))
+                                             (conj dst nxt)
+                                             dst))
+
+                                       (number? cur)
+                                         (if (>= limit (+ sum cur))
+                                           (recur (+ sum cur) (rest src) (conj dst cur))
+                                         dst))))]
+                           (go 0 nums [])))]
+    (=  (coll-up-to-sum 10 [1 2 [3 [4 5] 6] 7])
+        '(1 2 (3 (4))))
+    (=  (coll-up-to-sum 30 [1 2 [3 [4 [5 [6 [7 8]] 9]] 10] 11])
+        '(1 2 (3 (4 (5 (6 (7)))))))
+    (=  (coll-up-to-sum 9 (range))
+        '(0 1 2 3))
+    (=  (coll-up-to-sum 1 [[[[[1]]]]])
+        '(((((1))))))
+    (=  (coll-up-to-sum 0 [1 2 [3 [4 5] 6] 7])
+        '())
+    (=  (coll-up-to-sum 0 [0 0 [0 [0]]])
+        '(0 0 (0 (0))))
+    (=  (coll-up-to-sum 1 [-10 [1 [2 3 [4 5 [6 7 [8]]]]]])
+        '(-10 (1 (2 3 (4)))))))
