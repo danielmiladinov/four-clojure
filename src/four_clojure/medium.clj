@@ -625,3 +625,32 @@
         '(0 0 (0 (0))))
     (=  (coll-up-to-sum 1 [-10 [1 [2 3 [4 5 [6 7 [8]]]]]])
         '(-10 (1 (2 3 (4)))))))
+
+(defn problem-one-hundred-fourteen
+  "take-while is great for filtering sequences, but it limited:
+  you can only examine a single item of the sequence at a time.
+  What if you need to keep track of some state as you go over the sequence?
+
+  Write a function which accepts an integer n, a predicate p, and a sequence.
+  It should return a lazy sequence of items in the list up to, but not including,
+  the nth item that satisfies the predicate."
+  []
+  (let [take-while-until (fn [limit pred coll]
+                           (letfn [(go [n src dst]
+                                     (if (= n limit)
+                                       dst
+                                       (let [cur (first src)
+                                             next-n (if (pred cur) (inc n) n)]
+                                         (go next-n (lazy-seq (rest src)) (if (= next-n limit)
+                                                                            dst
+                                                                            (conj dst cur))))))]
+                             (go 0 (lazy-seq coll) [])))]
+    (= [2 3 5 7 11 13]
+       (take-while-until 4 #(= 2 (mod % 3))
+           [2 3 5 7 11 13 17 19 23]))
+    (= ["this" "is" "a" "sentence"]
+       (take-while-until 3 #(some #{\i} %)
+           ["this" "is" "a" "sentence" "i" "wrote"]))
+    (= ["this" "is"]
+       (take-while-until 1 #{"a"}
+           ["this" "is" "a" "sentence" "i" "wrote"]))))
