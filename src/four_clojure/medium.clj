@@ -654,3 +654,24 @@
     (= ["this" "is"]
        (take-while-until 1 #{"a"}
            ["this" "is" "a" "sentence" "i" "wrote"]))))
+
+(defn problem-one-hundred-fifteen
+  "A balanced number is one whose component digits have the same sum on the left and right halves of the number.
+  Write a function which accepts an integer n, and returns true iff n is balanced."
+  []
+  (let [balanced-number? (fn [n]
+                           (let [digits (remove empty? (clojure.string/split (str n) #""))
+                                 midpoint (quot (count digits) 2)
+                                 digit-sum (fn [ds] (apply + (map #(Integer. %) ds)))]
+                             (->> [(take midpoint digits) (take-last midpoint digits)]
+                                  (map digit-sum)
+                                  (apply =))))]
+    (= true (balanced-number? 11))
+    (= true (balanced-number? 121))
+    (= false (balanced-number? 123))
+    (= true (balanced-number? 0))
+    (= false (balanced-number? 88099))
+    (= true (balanced-number? 89098))
+    (= true (balanced-number? 89089))
+    (= (take 20 (filter balanced-number? (range)))
+       [0 1 2 3 4 5 6 7 8 9 11 22 33 44 55 66 77 88 99 101])))
