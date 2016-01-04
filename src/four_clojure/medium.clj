@@ -675,3 +675,23 @@
     (= true (balanced-number? 89089))
     (= (take 20 (filter balanced-number? (range)))
        [0 1 2 3 4 5 6 7 8 9 11 22 33 44 55 66 77 88 99 101])))
+
+(defn proble-one-hundred-sixteen
+  "A balanced prime is a prime number which is also the mean of the primes directly before and after it in the sequence
+  of valid primes. Create a function which takes an integer n, and returns true iff it is a balanced prime."
+  []
+  (let [balanced-prime? (fn balanced-prime? [n]
+                          (let [prime? (fn [x]
+                                         (if (or (= x 1) (= x 2))
+                                           true
+                                           (not-any? #(zero? (mod x %)) (range 2 x))))
+                                primes (filter prime? (drop 1 (range)))]
+                            (boolean
+                              (when (and (>= n 5)
+                                         (prime? n))
+                                (let [pp (last (take-while #(< % n) primes))
+                                      np (first (drop-while #(<= % n) primes))]
+                                  (= n (/ (+ pp np) 2)))))))]
+    (= false (balanced-prime? 4))
+    (= true (balanced-prime? 563))
+    (= 1103 (nth (filter balanced-prime? (range)) 15))))
