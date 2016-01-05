@@ -586,3 +586,108 @@
     (= "1, 1, 1, 1, 1" (str (apply dance-data (repeat 5 1))))
     (and (= nil (seq (dance-data)))
          (=  "" (str (dance-data))))))
+
+(defn problem-one-hundred-seventeen
+  "A mad scientist with tenure has created an experiment tracking mice in a maze.
+  Several mazes have been randomly generated, and you've been tasked with writing a program to determine the mazes
+  in which it's possible for the mouse to reach the cheesy endpoint.
+  Write a function which accepts a maze in the form of a collection of rows, each row is a string where:
+
+  * Spaces represent areas where the mouse can walk freely
+  * Hashes (#) represent walls where the mouse can not walk
+  * M represents the mouse's starting point
+  * C represents the cheese which the mouse must reach
+
+  The mouse is not allowed to travel diagonally in the maze (only up/down/left/right), nor can he escape the edge
+  of the maze. Your function must return true iff the maze is solvable by the mouse."
+  []
+  (let [maze-solvable? (fn [maze-rows]
+                         (let [maze (vec (map (fn vectorize [row-string]
+                                                (->> (clojure.string/split row-string #"")
+                                                     (remove empty?)
+                                                     (vec)))
+                                              maze-rows))
+
+                               coords-of (fn [target]
+                                           (->> (map-indexed
+                                                  (fn [row-index row]
+                                                    (map-indexed
+                                                      (fn [col-index cell]
+                                                        (when (= target cell)
+                                                          [row-index col-index]))
+                                                      row))
+                                                  maze)
+                                                (mapcat #(remove nil? %))
+                                                (set)))
+
+                               neighbors-of (fn [cell]
+                                              (let [[row col] cell]
+                                                (set (concat (for [r [(dec row) (inc row)]] [r col])
+                                                             (for [c [(dec col) (inc col)]] [row c])))))
+
+                               adjacent? (fn [c1 c2]
+                                           (clojure.set/intersection (neighbors-of c1) (hash-set c2)))
+
+                               any-adjacent? (fn [sources]
+                                               (fn [dest]
+                                                 (not-every?
+                                                   empty?
+                                                   (map (partial adjacent? dest) sources))))
+
+                               path-exists? (fn [start goal unexplored]
+                                              (let [adjacent-to-start (filter (any-adjacent? start) unexplored)
+                                                    adjacent-to-goal (filter (any-adjacent? goal) unexplored)]
+
+                                                (cond
+                                                  (empty? unexplored) (boolean (seq (filter (any-adjacent? start) goal)))
+                                                  (every? empty? [adjacent-to-start adjacent-to-goal]) false
+                                                  :else (recur (into start adjacent-to-start)
+                                                               (into goal adjacent-to-goal)
+                                                               (clojure.set/difference unexplored adjacent-to-start adjacent-to-goal)))))]
+
+                           (path-exists?
+                             (coords-of "M")
+                             (coords-of "C")
+                             (coords-of " "))))]
+
+    (= true (maze-solvable? ["M   C"]))
+
+    (= false (maze-solvable? ["M # C"]))
+
+    (= true (maze-solvable? ["#######"
+                             "#     #"
+                             "#  #  #"
+                             "#M # C#"
+                             "#######"]))
+
+    (= false (maze-solvable? ["########"
+                              "#M  #  #"
+                              "#   #  #"
+                              "# # #  #"
+                              "#   #  #"
+                              "#  #   #"
+                              "#  # # #"
+                              "#  #   #"
+                              "#  #  C#"
+                              "########"]))
+
+    (= false (maze-solvable? ["M     "
+                              "      "
+                              "      "
+                              "      "
+                              "    ##"
+                              "    #C"]))
+
+    (= true (maze-solvable? ["C######"
+                             " #     "
+                             " #   # "
+                             " #   #M"
+                             "     # "]))
+
+    (= true (maze-solvable? ["C# # # #"
+                             "        "
+                             "# # # # "
+                             "        "
+                             " # # # #"
+                             "        "
+                             "# # # #M"]))))
