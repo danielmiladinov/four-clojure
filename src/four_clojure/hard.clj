@@ -691,3 +691,98 @@
                              " # # # #"
                              "        "
                              "# # # #M"]))))
+
+(defn problem-one-hundred-nineteen
+  "As in Problem 73, a tic-tac-toe board is represented by a two dimensional vector.
+  X is represented by :x, O is represented by :o, and empty is represented by :e.
+  Create a function that accepts a game piece and board as arguments,
+  and returns a set (possibly empty) of all valid board placements of the game piece
+  which would result in an immediate win.
+
+  Board coordinates should be as in calls to get-in. For example, [0 1] is the topmost row, center position."
+  []
+  (let [winning-moves (fn [player board]
+                        (let [coords-of (fn [target]
+                                          (->> (map-indexed
+                                                 (fn [row-index row]
+                                                   (map-indexed
+                                                     (fn [col-index cell]
+                                                       (when (= target cell)
+                                                         [row-index col-index]))
+                                                     row))
+                                                 board)
+                                               (mapcat #(remove nil? %))
+                                               (set)))
+
+                              wins? (fn [board]
+                                      (let [row (fn [n b] (b n))
+                                            col (fn [n b] (into [] (map #(% n) b)))
+                                            ldiag (fn [b]
+                                                    (->> (reduce
+                                                           (fn [[ld i] r]
+                                                             (vector
+                                                               (conj ld (r i))
+                                                               (inc i)))
+                                                           [[] 0] b)
+                                                         (first)))
+                                            rdiag (fn [b]
+                                                    (->> (reduce
+                                                           (fn [[rd i] r]
+                                                             (vector
+                                                               (conj rd (r i))
+                                                               (dec i)))
+                                                           [[] 2] b)
+                                                         (first)))
+                                            xs (fn [s] (map #(if (= :x %) 1 0) s))
+                                            os (fn [s] (map #(if (= :o %) 1 0) s))
+                                            won (fn [p]
+                                                  (->>
+                                                    (map
+                                                      (fn [f]
+                                                        (->>
+                                                          (f board)
+                                                          (p)
+                                                          (apply +)))
+                                                      [(partial row 0)
+                                                       (partial row 1)
+                                                       (partial row 2)
+                                                       (partial col 0)
+                                                       (partial col 1)
+                                                       (partial col 2)
+                                                       ldiag
+                                                       rdiag])
+                                                    (filter #(= 3 %))
+                                                    (seq)))]
+                                        (cond
+                                          (won xs) (= :x player)
+                                          (won os) (= :o player)
+                                          :else nil)))]
+
+                          (->> (coords-of :e)
+                               (filter #(wins? (assoc-in board % player)))
+                               (set))))]
+
+    (= (winning-moves :x [[:o :e :e]
+                          [:o :x :o]
+                          [:x :x :e]])
+       #{[2 2] [0 1] [0 2]})
+
+    (= (winning-moves :x [[:x :o :o]
+                          [:x :x :e]
+                          [:e :o :e]])
+       #{[2 2] [1 2] [2 0]})
+
+    (= (winning-moves :x [[:x :e :x]
+                          [:o :x :o]
+                          [:e :o :e]])
+       #{[2 2] [0 1] [2 0]})
+
+    (= (winning-moves :x [[:x :x :o]
+                          [:e :e :e]
+                          [:e :e :e]])
+       #{})
+
+    (= (winning-moves :o [[:x :x :o]
+                          [:o :e :o]
+                          [:x :e :e]])
+       #{[2 2] [1 1]})))
