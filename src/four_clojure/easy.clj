@@ -519,3 +519,15 @@
     (= 19 (num-less-than-sum-of-squares-of-digits (range 30)))
     (= 50 (num-less-than-sum-of-squares-of-digits (range 100)))
     (= 50 (num-less-than-sum-of-squares-of-digits (range 1000)))))
+
+(defn problem-one-hundred-twenty-two
+  "Convert a binary number, provided in the form of a string, to its numerical value."
+  []
+  (let [read-binary (fn [s] (Integer/parseInt s 2))]
+    (= 0 (read-binary "0"))
+    (= 7 (read-binary "111"))
+    (= 8 (read-binary "1000"))
+    (= 9 (read-binary "1001"))
+    (= 255 (read-binary "11111111"))
+    (= 1365 (read-binary "10101010101"))
+    (= 65535 (read-binary "1111111111111111"))))
