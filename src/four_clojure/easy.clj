@@ -523,7 +523,13 @@
 (defn problem-one-hundred-twenty-two
   "Convert a binary number, provided in the form of a string, to its numerical value."
   []
-  (let [read-binary (fn [s] (Integer/parseInt s 2))]
+  (let [read-binary (fn [s]
+                      (->> (reverse s)
+                           (map-indexed (fn [pow bit-char]
+                                          (if (= \1 bit-char)
+                                            (apply * (repeat pow 2))
+                                            0)))
+                           (apply +)))]
     (= 0 (read-binary "0"))
     (= 7 (read-binary "111"))
     (= 8 (read-binary "1000"))
