@@ -786,3 +786,92 @@
                           [:o :e :o]
                           [:x :e :e]])
        #{[2 2] [1 1]})))
+
+(defn problem-one-hundred-twenty-four
+  "Reversi is normally played on an 8 by 8 board.
+  In this problem, a 4 by 4 board is represented as a two-dimensional vector with black, white,
+  and empty pieces represented by 'b, 'w, and 'e, respectively. Create a function that accepts a game board and color
+  as arguments, and returns a map of legal moves for that color. Each key should be the coordinates of a legal move,
+  and its value a set of the coordinates of the pieces flipped by that move.
+
+  Board coordinates should be as in calls to get-in.
+  For example, [0 1] is the topmost row, second column from the left."
+  []
+  (let [legal-reversi-moves (fn [board player]
+                              (let [opponent-of {'b 'w
+                                                 'w 'b}
+                                    coords-of (fn [target]
+                                                (->> (map-indexed
+                                                       (fn [row-index row]
+                                                         (map-indexed
+                                                           (fn [col-index cell]
+                                                             (when (= target cell)
+                                                               [row-index col-index]))
+                                                           row))
+                                                       board)
+                                                     (mapcat #(remove nil? %))
+                                                     (set)))
+
+                                    ss (fn [[row col]] [(inc row) col])
+                                    se (fn [[row col]] [(inc row) (inc col)])
+                                    sw (fn [[row col]] [(inc row) (dec col)])
+
+                                    nn (fn [[row col]] [(dec row) col])
+                                    ne (fn [[row col]] [(dec row) (inc col)])
+                                    nw (fn [[row col]] [(dec row) (dec col)])
+
+                                    ee (fn [[row col]] [row (inc col)])
+                                    ww (fn [[row col]] [row (dec col)])
+
+                                    directions [nn ne ee se ss sw ww nw]
+
+                                    lookup (partial get-in board)
+                                    on-board? (comp (complement nil?) lookup)
+
+                                    walk (fn [start direction]
+                                           (rest
+                                             (take-while on-board? (iterate direction start))))
+
+                                    path-regex (re-pattern (str (opponent-of player) "+" player ".*"))
+
+                                    valid-path? (fn [path] (boolean (re-matches path-regex (apply str path))))]
+
+                                (->> (coords-of 'e)
+                                     (map (fn [cell]
+                                            (map (fn [dir]
+                                                   (let [cells (walk cell dir)
+                                                         path (map lookup cells)]
+                                                     (when (valid-path? path)
+                                                       [cell (filter
+                                                               (fn [cell]
+                                                                 (= (opponent-of player) (lookup cell)))
+                                                               cells)])))
+
+                                                 directions)))
+                                     (map (partial remove nil?))
+                                     (remove empty?)
+                                     (reduce (fn [m [[k v]]] (assoc m k (set v))) {}))))]
+
+    (= {[1 3] #{[1 2]}, [0 2] #{[1 2]}, [3 1] #{[2 1]}, [2 0] #{[2 1]}}
+       (legal-reversi-moves '[[e e e e]
+                              [e w b e]
+                              [e b w e]
+                              [e e e e]] 'w))
+
+    (= {[3 2] #{[2 2]}, [3 0] #{[2 1]}, [1 0] #{[1 1]}}
+       (legal-reversi-moves '[[e e e e]
+                              [e w b e]
+                              [w w w e]
+                              [e e e e]] 'b))
+
+    (= {[0 3] #{[1 2]}, [1 3] #{[1 2]}, [3 3] #{[2 2]}, [2 3] #{[2 2]}}
+       (legal-reversi-moves '[[e e e e]
+                              [e w b e]
+                              [w w b e]
+                              [e e b e]] 'w))
+
+    (= {[0 3] #{[2 1] [1 2]}, [1 3] #{[1 2]}, [2 3] #{[2 1] [2 2]}}
+       (legal-reversi-moves '[[e e w e]
+                              [b b w e]
+                              [b w w e]
+                              [b w w w]] 'b))))
