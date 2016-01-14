@@ -537,3 +537,9 @@
     (= 255 (read-binary "11111111"))
     (= 1365 (read-binary "10101010101"))
     (= 65535 (read-binary "1111111111111111"))))
+
+(defn problem-one-hundred-twenty-six
+  "Enter a value which satisfies the following:"
+  []
+  (let [x java.lang.Class]
+    (and (= (class x) x) x)))
